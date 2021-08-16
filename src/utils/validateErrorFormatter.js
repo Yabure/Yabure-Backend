@@ -2,12 +2,11 @@ const validateErrorFormatter = (errors) => {
     if(errors.details) {
         const error = {}
         for(const err of errors.details){
-            //@ts-ignore
             error[err.context.key] = err.message;
         }
         return error;
     }
-    return errors.message
+    return errors.message.split(":")[1]
 }
-
-module.exports = validateErrorFormatter;
+ 
+module.exports = validateErrorFormatter;  

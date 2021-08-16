@@ -1,6 +1,5 @@
 const  _ = require("lodash")
 const bcryptUtils = require("../utils/bcryptUtils")
-const helper = require("../utils/helpers")
 const jwtUtils = require("../utils/token.utils")
 const User = require("../data-access/user.dao")
 const mail = require("./mail.service")
@@ -32,23 +31,25 @@ authService.login = async (data, password) => {
     }
 
     const authToken = jwtUtils.generateToken(user.id)
-    return { authToken } 
+    return { authToken, data: {} } 
 
 }
  
-authService.registerAndLogin = async (data) => {
+authService.registerAndLogin = async (user) => {
     try {
-        const unHashedPass = data.password  
-        const newUser = await authService.register(data)
-        const { authToken } = await authService.login(newUser, unHashedPass)
-        return { authToken } 
+        const unHashedPass = user.password  
+        const newUser = await authService.register(user)    
+        const { authToken, data } = await authService.login(newUser, unHashedPass)
+        return { authToken, data } 
     } catch(err){
+        console.log("error happend", err)
         throw new Error(err)
     }
 }
 
 authService.verifyUser = async (data) => {
     try {
+        if(!data.email || !data.token) throw new Error("Token or Email is empty")
         const user = await User.findByEmail(data.email);
         if(!user) throw new Error("User does not exists")
 

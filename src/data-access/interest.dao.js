@@ -1,11 +1,16 @@
 const { PrismaClient } = require("@prisma/client")
 const prisma = new PrismaClient({errorFormat: 'minimal'})
 
-const Token = {
-    async findByEmail(email) {
-        const result = await prisma.tokens.findUnique({ where: { email }});
+const Interest = {
+    async findAll() {
+        const result = await prisma.interests.findMany();
         return result;
       },
+  
+    //   async findByPhone(phone) {
+    //     const result = await userModel.findOne({ where: { phone }, attributes: { exclude: ['id', 'password'] } });
+    //     return result;
+    //   },
   
     //   async findByUuid(user_uuid) {
     //     const result = await userModel.findOne({ where: { user_uuid }, attributes: { exclude: ['id', 'password'] } });
@@ -13,7 +18,7 @@ const Token = {
     //   },
   
       async insert(data) {
-        const result = await prisma.tokens.create({data});
+        const result = await prisma.interests.create({data});
         // if (result) return true;
         return result;
       },
@@ -25,7 +30,7 @@ const Token = {
     //   },
       
     async remove(email) {
-        await prisma.tokens.deleteMany({
+        await prisma.interests.deleteMany({
             where: {
                 email: {
                 contains: email,
@@ -37,4 +42,4 @@ const Token = {
       
 }
 
-module.exports = Token
+module.exports = Interest

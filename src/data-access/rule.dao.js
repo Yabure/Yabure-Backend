@@ -1,11 +1,16 @@
 const { PrismaClient } = require("@prisma/client")
 const prisma = new PrismaClient({errorFormat: 'minimal'})
 
-const Token = {
-    async findByEmail(email) {
-        const result = await prisma.tokens.findUnique({ where: { email }});
+const Rule = {
+    async findByType(type) {
+        const result = await prisma.rules.findFirst({ where: { type }});
         return result;
       },
+  
+    //   async findByPhone(phone) {
+    //     const result = await userModel.findOne({ where: { phone }, attributes: { exclude: ['id', 'password'] } });
+    //     return result;
+    //   },
   
     //   async findByUuid(user_uuid) {
     //     const result = await userModel.findOne({ where: { user_uuid }, attributes: { exclude: ['id', 'password'] } });
@@ -37,4 +42,4 @@ const Token = {
       
 }
 
-module.exports = Token
+module.exports = Rule
