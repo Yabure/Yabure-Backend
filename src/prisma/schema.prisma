@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -11,7 +11,7 @@ generator client {
 }
 
 model Users {
-  id Int @default(autoincrement()) @id
+  id String @id @default(uuid()) 
   firstName String
   lastName String
   phoneNumber String
@@ -23,9 +23,25 @@ model Users {
 }
 
 model Tokens {
-  id Int @default(autoincrement()) @id
+  id String @id @default(uuid()) 
   email String @unique
   token String 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Interests {
+  id String @id @default(uuid()) 
+  field String @unique
+  interests String[] 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Rules {
+  id String @id @default(uuid()) 
+  type String @unique
+  rule String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

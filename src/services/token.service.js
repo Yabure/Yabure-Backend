@@ -1,5 +1,4 @@
 const Token = require("../data-access/token.dao");
-const mail = require("./mail.service");
 const helper = require("../utils/helpers")
 
 token = {}
