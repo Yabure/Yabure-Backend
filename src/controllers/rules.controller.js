@@ -1,4 +1,3 @@
-
 const validateErrorFormatter = require("../utils/validateErrorFormatter")
 const ruleService = require("../services/rule.service")
 const Response = require("../utils/errorResponse")

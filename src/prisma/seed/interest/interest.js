@@ -2,7 +2,7 @@ const interests = require("./interestData")
 
 const seedInterest = async (prisma) => {
   for (let interest of interests){
-    await prisma.interests.upsert({
+    await prisma.interest.upsert({
         where: {
             field: interest.field,
           },

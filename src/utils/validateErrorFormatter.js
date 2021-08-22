@@ -6,7 +6,8 @@ const validateErrorFormatter = (errors) => {
         }
         return error;
     }
-    return errors.message.split(":")[1]
+    const error = errors.message.split(":")[1] ? errors.message.split(":")[1] : errors.message.split(":")[0] 
+    return error
 }
  
 module.exports = validateErrorFormatter;  

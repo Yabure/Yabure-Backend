@@ -9,12 +9,12 @@ authController.register = async (request, response) => {
 	try{
 		const validatedData = await authValidation.registerValidation(request.body)
 		const { authToken, data } = await authService.registerAndLogin(validatedData);
-		response.setCookie(process.env.SESSION_NAME, JSON.stringify({authToken}), { path: '/', signed: true })
+		response.setCookie(process.env.SESSION_NAME, authToken, { path: '/'})
 		return Response.SUCCESS({ response, data, message: "Registered Successfully"})
 	} catch(err){
-		console.log(err)
+		console.log("err here")
 		const errors = validateErrorFormatter(err)
-		return Response.INVALID_REQUEST({ response, errors })
+		return Response.INVALID_REQUEST({ response, errors, message: errors })
 	}
 }
 
@@ -22,10 +22,10 @@ authController.login = async (request, response) => {
 	try {
 		const { authToken, data } = await authService.login(request.body)
 		if(Object.keys(data).length !== 0 && !data.isVerified){
-			console.log({authToken, data})
 			return Response.INVALID_REQUEST({ response, errors: data})
 		}
-		response.setCookie(process.env.SESSION_NAME, JSON.stringify({authToken}), { path: '/', signed: true })
+
+		response.setCookie(process.env.SESSION_NAME, authToken, { path: '/'})
 		return Response.SUCCESS({ response, data: {}, message: "Logged In Successfully"})
 	} catch(err) {
 		const errors = validateErrorFormatter(err)
@@ -36,7 +36,7 @@ authController.login = async (request, response) => {
 authController.verifyUser = async (request, response) => {
 	try {
 		const { authToken } = await authService.verifyUser(request.query);
-		response.setCookie(process.env.SESSION_NAME, JSON.stringify({authToken}), { path: '/', signed: true })
+		response.setCookie(process.env.SESSION_NAME, authToken, { path: '/'})
 		return Response.SUCCESS({ response, data: {}, message: "Verified Successfully"})
 	}  catch(err) {
 		const errors = validateErrorFormatter(err)

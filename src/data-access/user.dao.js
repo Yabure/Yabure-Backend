@@ -3,7 +3,7 @@ const prisma = new PrismaClient({errorFormat: 'minimal'})
 
 const User = {
     async findByEmail(email) {
-        const result = await prisma.users.findUnique({ where: { email }});
+        const result = await prisma.user.findUnique({ where: { email }});
         return result;
       },
   
@@ -18,13 +18,25 @@ const User = {
     //   },
   
       async insert(data) {
-        const result = await prisma.users.create({data});
+        const result = await prisma.user.create({
+          data: {
+            email: data.email,
+            password: data.password,
+            profile: {
+              create: {
+                fullName: `${data.firstName} ${data.lastName}`,
+                username: `${data.firstName.toLowerCase()}${data.lastName.toLowerCase()}_yabure${Math.floor(Math.random() * 10001) + 1}`,
+                phoneNumber: `${data.phoneNumber}`  
+              }
+            }
+          }
+        });
         // if (result) return true;
         return result;
       },
   
       async updateUserVerification(email, data) {
-        const user = await prisma.users.updateMany({
+        const user = await prisma.user.updateMany({
           where: {
             email: {
               contains: email,
