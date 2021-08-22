@@ -2,7 +2,7 @@ const rules = require("./ruleData")
 
 const seedRules = async (prisma) => {
   for (let rule of rules){
-    await prisma.rules.upsert({
+    await prisma.rule.upsert({
         where: {
             type: rule.type,
           },

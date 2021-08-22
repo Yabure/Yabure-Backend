@@ -6,4 +6,8 @@ jwtUtils.generateToken = (data) => {
     return jwt.sign({id: data}, process.env.SECRET ?? "")
 }
 
+jwtUtils.decrypt = (token) => {
+    return jwt.verify(token, process.env.SECRET)
+}
+
 module.exports = jwtUtils

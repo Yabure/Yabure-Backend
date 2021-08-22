@@ -1,10 +1,10 @@
-const fastify = require("fastify")
-const app = fastify()
 const middlewares = require("./middleware")
 const routes = require("./routes")
 
 
-middlewares(app)
-routes(app)
+const App = server => {
+    middlewares(server)
+    routes(server)
+}
 
-module.exports = app
+module.exports = App

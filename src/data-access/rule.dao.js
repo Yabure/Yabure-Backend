@@ -3,7 +3,7 @@ const prisma = new PrismaClient({errorFormat: 'minimal'})
 
 const Rule = {
     async findByType(type) {
-        const result = await prisma.rules.findFirst({ where: { type }});
+        const result = await prisma.rule.findFirst({ where: { type }});
         return result;
       },
   
@@ -18,7 +18,7 @@ const Rule = {
     //   },
   
       async insert(data) {
-        const result = await prisma.tokens.create({data});
+        const result = await prisma.rule.create({data});
         // if (result) return true;
         return result;
       },
@@ -30,7 +30,7 @@ const Rule = {
     //   },
       
     async remove(email) {
-        await prisma.tokens.deleteMany({
+        await prisma.rule.deleteMany({
             where: {
                 email: {
                 contains: email,

@@ -12,25 +12,25 @@ function formatResponse(params) {
 }
 
 class ResponseFormatter {
-  static SUCCESS(params) {
+  static async SUCCESS(params) {
     const { message= "Request Successful", data= {}, response } = params;
-    const responseDetails = formatResponse({ data, message, success: true });
+    const responseDetails =  formatResponse({ data, message, success: true });
     return response.status(HttpStatusCode.OK().value).send(responseDetails);
   }
 
-  static CREATED(params) {
+  static async CREATED(params) {
     const { message = 'Request Successful', data = {}, response } = params;
     const responseDetails = formatResponse({ message, success: true });
     return response.status(HttpStatusCode.CREATED().value).send(responseDetails);
   }
 
-  static INVALID_REQUEST(params) {
+  static async INVALID_REQUEST(params) {
     const { message = 'Request failed', errors = true, response } = params;
     const responseDetails = formatResponse({ errors, message, success: false });
     return response.status(HttpStatusCode.INVALID_REQUEST().value).send(responseDetails);
   }
 
-  static UNPROCCESSABLE_ENTITY(params) {
+  static async UNPROCCESSABLE_ENTITY(params) {
     const { message = 'Request failed', errors = true, response } = params;
     const responseDetails = formatResponse({ errors: true, message, success: false });
     return response.status(HttpStatusCode.UNPROCESSABLE_ENTITY().value).send(responseDetails);

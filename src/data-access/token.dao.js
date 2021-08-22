@@ -3,7 +3,7 @@ const prisma = new PrismaClient({errorFormat: 'minimal'})
 
 const Token = {
     async findByEmail(email) {
-        const result = await prisma.tokens.findUnique({ where: { email }});
+        const result = await prisma.token.findUnique({ where: { email }});
         return result;
       },
   
@@ -13,7 +13,7 @@ const Token = {
     //   },
   
       async insert(data) {
-        const result = await prisma.tokens.create({data});
+        const result = await prisma.token.create({data});
         // if (result) return true;
         return result;
       },
@@ -25,7 +25,7 @@ const Token = {
     //   },
       
     async remove(email) {
-        await prisma.tokens.deleteMany({
+        await prisma.token.deleteMany({
             where: {
                 email: {
                 contains: email,
