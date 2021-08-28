@@ -40,10 +40,13 @@ model interest {
 
 model profile {
   id String @id @default(uuid())
-  userId String
+  userId String @unique
   fullName String
   username String @unique
-  phoneNumber String  
+  picture String  @default("null")
+  phoneNumber String @unique
+  notes Int @default(0)
+  streams Int @default(0)
   user user @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -51,12 +54,11 @@ model profile {
 
 model account {
   id String @id @default(uuid())
-  userId String
+  userId String @unique
   user user @relation(fields: [userId], references: [id])
-  accountNumber String
+  accountNumber String @unique
   bank String 
   accountName String
-  bvn String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
