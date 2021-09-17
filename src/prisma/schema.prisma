@@ -17,6 +17,7 @@ model user {
   interest user_interest?
   account account?
   profile profile?
+  books book[]
   isVerified Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -34,6 +35,7 @@ model interest {
   id String @id @default(uuid()) 
   field String @unique
   interests String[] 
+  book book[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -77,6 +79,18 @@ model rule {
   id String @id @default(uuid()) 
   type String @unique
   rule String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model book {
+  id String @id @default(uuid())
+  author String 
+  bookName String
+  bookNumber String @unique
+  category String 
+  interest interest @relation(fields: [category], references: [id])
+  user user @relation(fields: [author], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

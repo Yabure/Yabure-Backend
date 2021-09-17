@@ -44,4 +44,22 @@ profileValidation.validateProfile= (data) => {
 
 }
 
+profileValidation.validateChangePassword = (data) => {
+    const validateChangePasswordSchema = Joi.object({
+        current_password: Joi.string().required().messages({
+            "string.base": "current password should be a string",
+            "string.empty": "current password cannot be empty",
+            "any.required": "current password is required"
+        }),
+        new_password:Joi.string().min(6).required().messages({
+            "string.base": "new password must be a string",
+            "string.empty": "new password field is required",
+            "any.required": "new password is required and should be greater than 6 characters"
+        }),
+    })
+
+    return validateChangePasswordSchema.validateAsync(data, {abortEarly: false})
+
+}
+
 module.exports = profileValidation

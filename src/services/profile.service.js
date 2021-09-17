@@ -1,6 +1,8 @@
 const Profile = require("../data-access/profile.dao");
 const Account = require("../data-access/account.dao");
 const fileSystem = require("../services/file-system");
+const User = require("../data-access/user.dao");
+const bcryptUtils = require("../utils/bcryptUtils")
 
 const profileService = {}
 
@@ -26,17 +28,32 @@ profileService.getProfile = async({user}) => {
     return userProfile
 }
 
-profileService.addProfile = async({user}, data) => {
-    console.log(user)
+profileService.addProfile = async ({user}, data) => {
     const userProfile = await Profile.findById(user)
     if(!userProfile) throw new Error("This user profile doesn't exists");
-    if(userProfile.username === data.user_name) throw new Error("Username already exists");
+
+    const existingUsername = await Profile.findByUserName(data.user_name)
+    if(existingUsername) throw new Error("Username already exists");
     data.userId = user
 
     await Profile.update(data)
     await Account.update(data)
  
     return userProfile
+}
+
+profileService.changePassword = async ({user}, data) => {
+    const userAccount = await User.findById(user);
+    if(!userAccount) throw new Error("This user doesn't exists");
+
+    const validPassword = await bcryptUtils.verifyPassword(data.current_password, userAccount.password)
+    if(!validPassword) throw new Error("Current password is not correct");
+
+    const newPassword = bcryptUtils.hashPassword(data.new_password)
+
+    await User.updateUserPassword(user, newPassword)
+
+    return userAccount
 }
 
 module.exports = profileService

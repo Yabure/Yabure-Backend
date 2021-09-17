@@ -55,10 +55,6 @@ const Profile = {
 
         return picture
       },
-  
-    //   async remove(userData) {
-    //     return "Not implemented";
-    //   },
       
 }
 

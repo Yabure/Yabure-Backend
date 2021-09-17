@@ -37,4 +37,15 @@ profileController.addProfile = async (req, res) => {
     }
 }
 
+profileController.changePassword = async (req, res) => {
+    try {
+        const validatedData = await profileValidation.validateChangePassword(req.body)
+        await profileService.changePassword(req, validatedData)
+        Response.SUCCESS({response: res, data: {}, message: "Password Updated Successfully" })
+    } catch(error){
+        const errors = validateErrorFormatter(error)
+		return Response.INVALID_REQUEST({ response: res, errors })
+    }
+}
+
 module.exports = profileController  

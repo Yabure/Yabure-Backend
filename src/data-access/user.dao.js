@@ -5,7 +5,12 @@ const User = {
     async findByEmail(email) {
         const result = await prisma.user.findUnique({ where: { email }});
         return result;
-      },
+    },
+
+    async findById(id) {
+        const result = await prisma.user.findUnique({ where: { id }});
+        return result;
+    },
   
     //   async findByPhone(phone) {
     //     const result = await userModel.findOne({ where: { phone }, attributes: { exclude: ['id', 'password'] } });
@@ -44,6 +49,19 @@ const User = {
           },
           data: {
             isVerified: true
+          },
+        })
+
+        return user
+      },
+
+      async updateUserPassword(id, password) {
+        const user = await prisma.user.update({
+          where: {
+            id
+          },
+          data: {
+            password
           },
         })
 

@@ -58,16 +58,6 @@ const Interest = [
         ]
     },
     {
-        field: "Science",
-        interest: [
-            "Architecture", 
-            "Building", 
-            "Estate Management", 
-            "Quantity Surveying", 
-            "Urban and Regional Planning", 
-        ]
-    },
-    {
         field: "Law",
         interest: [
             "Commercial and Industrial Law",

@@ -61,4 +61,21 @@ fileSystem.uploadImage = async (image) => {
     return fileName
 };
 
+fileSystem.uploadPdf = async (file) => {
+    const filetypes = /pdf|epub/;
+    // Check ext
+    const extname = filetypes.test(path.extname(file.filename).toLowerCase());
+    // Check mime
+    const mimetype = filetypes.test(file.mimetype);
+  
+    if (!(mimetype && extname)) {
+      throw new Error("file type not supported", 400);
+    }
+
+
+    const url = await fileSystem.uploadFile("books", file)
+    const fileName = fileSystem.getFileName(url)
+    return fileName
+};
+
 module.exports =  fileSystem

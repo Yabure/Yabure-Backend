@@ -64,7 +64,7 @@ authService.verifyUser = async (data) => {
         const verified = await token.verifyUserToken(data.email, data.token);
         if(!verified) throw new Error("Invalid Token");
 
-        const updatedUser = await User.updateUserVerification(data.email)
+        await User.updateUserVerification(data.email)
 
         const authToken = jwtUtils.generateToken(user.id)
         return { authToken } 
