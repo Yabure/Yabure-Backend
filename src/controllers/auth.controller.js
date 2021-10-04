@@ -44,4 +44,15 @@ authController.verifyUser = async (request, response) => {
 	}
 }
 
+authController.resendVerification = async (request, response) => {
+	try {
+		await authService.resendVerification(request.query)
+
+		return Response.SUCCESS({ response, data: {}, message: "Sent Successfully"})
+	} catch(err) {
+		const errors = validateErrorFormatter(err)
+		return Response.INVALID_REQUEST({ response, errors })
+	}
+}
+
 module.exports = authController

@@ -38,9 +38,6 @@ authService.login = async (data, password) => {
         const authToken = jwtUtils.generateToken(user.id)
         return { authToken, data: {} } 
 
-
-    
-
 } 
  
 authService.registerAndLogin = async (user) => {
@@ -70,6 +67,17 @@ authService.verifyUser = async (data) => {
         return { authToken } 
 
   
+}
+
+authService.resendVerification = async ({email}) => {
+    const user = await User.findByEmail(email);
+    if(!user) throw new Error("User does not exists");
+
+    if(user.isVerified) throw new Error("User already verified");
+
+    const verifyToken = await token.generateVerificationToken(user.email)
+    await mail.sendVerificationEmail(user, verifyToken)
+    return true
 }
 
 module.exports = authService

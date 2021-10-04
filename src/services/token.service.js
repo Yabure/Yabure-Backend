@@ -5,7 +5,6 @@ token = {}
 
 token.generateVerificationToken = async (email) => {
     const userToken = await Token.findByEmail(email)
-    console.log(userToken)
     if(userToken) await Token.remove(userToken.email)
     const tokenDigits = helper.randomSixDigits();
     const data = {
