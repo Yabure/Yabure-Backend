@@ -26,6 +26,17 @@ bookController.getAllBooks = async (req, res) => {
     }
 };
 
+bookController.getSuggestedBooks = async (req, res) => {
+    try {
+        // console.log(req)
+        const books = await bookService.getSuggestedBooks(req)
+        Response.SUCCESS({response: res, data: books, message: "Request successfully"})
+    } catch(error) {
+        const errors = validateErrorFormatter(error)
+		return Response.INVALID_REQUEST({ response: res, errors })
+    }
+};
+
 
 
 

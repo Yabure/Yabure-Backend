@@ -2,7 +2,8 @@ const Profile = require("../data-access/profile.dao");
 const Account = require("../data-access/account.dao");
 const fileSystem = require("../services/file-system");
 const User = require("../data-access/user.dao");
-const bcryptUtils = require("../utils/bcryptUtils")
+const bcryptUtils = require("../utils/bcryptUtils");
+const ratingService = require("./rating.service");
 
 const profileService = {}
 
@@ -55,5 +56,6 @@ profileService.changePassword = async ({user}, data) => {
 
     return userAccount
 }
+
 
 module.exports = profileService

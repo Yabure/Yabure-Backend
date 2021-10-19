@@ -40,6 +40,21 @@ const Profile = {
 
         return result;
       },
+
+      async addNotes(userId) {
+        const result = await prisma.profile.update({
+          where: {
+            userId
+          },
+          data: {
+            notes: {
+              increment: 1
+            }
+          },
+        });
+
+        return result;
+      },
   
       async updatePicture(userId, data) {
         const picture = await prisma.profile.updateMany({
