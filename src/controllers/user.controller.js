@@ -20,24 +20,16 @@ userController.storeInterest = async (req, res) => {
     }
 }
 
-userController.getUserRating = async (req, res) => {
+
+userController.gtePopularUploaders = async (req, res) => {
     try{
-        const rating = await ratingService.getUserRating(req.query)
-        return Response.SUCCESS({ response: res, data: rating, message: "Request Successful" })
+        const result = await userService.gtePopularUploaders()
+        return Response.SUCCESS({ response: res, data: result, message: "Request Successful" })
     } catch(err) {
        const errors = await validateErrorFormatter(err) 
        return Response.INVALID_REQUEST({ response: res, errors})
     }
 }
 
-userController.rateUser = async (req, res) => {
-    try {
-        await userService.addRatings(req.body)
-        Response.SUCCESS({response: res, data: {}, message: "Rated User Successfully" })
-    } catch(error){
-        const errors = validateErrorFormatter(error)
-		return Response.INVALID_REQUEST({ response: res, errors })
-    }
-}
 
 module.exports = userController

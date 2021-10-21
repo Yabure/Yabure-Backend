@@ -47,7 +47,6 @@ authService.registerAndLogin = async (user) => {
         const { authToken, data } = await authService.login(newUser, unHashedPass)
         return { authToken, data } 
     } catch(err){
-        console.log("error happend", err)
         throw new Error(err)
     }
 }
