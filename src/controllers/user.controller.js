@@ -2,7 +2,7 @@ const validateErrorFormatter = require("../utils/validateErrorFormatter")
 const Response = require("../utils/errorResponse")
 const interestValidation = require("../validators/interest.Validation")
 const userService = require("../services/user.service")
-const ratingService = require("../services/rating.service")
+const FollowersService = require("../services/follow.service")
 
 const userController = {}
 
@@ -30,6 +30,18 @@ userController.gtePopularUploaders = async (req, res) => {
        return Response.INVALID_REQUEST({ response: res, errors})
     }
 }
+
+userController.follow = async (req, res) => {
+    try{
+        await FollowersService.follow(req)
+        return Response.SUCCESS({ response: res, data: {}, message: "Request Successful" })
+    } catch(err) {
+       const errors = await validateErrorFormatter(err) 
+       return Response.INVALID_REQUEST({ response: res, errors})
+    }
+}
+
+
 
 
 module.exports = userController

@@ -1,5 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
-const { find } = require("lodash");
+const { find, orderBy } = require("lodash");
 const prisma = new PrismaClient({errorFormat: 'minimal'})
 const  _ = require("lodash");
 
@@ -41,12 +41,15 @@ const Book = {
         let result = await prisma.book.findMany({
             where: {
                 category 
+            },
+            orderBy: {
+                createdAt: 'desc'
             }
         });
         if(result) {
             result = result.map(res => {
                 res.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${res.bookNumber}`
-                return  _.pick(res, ['author', 'bookName', 'book'])
+                return  _.pick(res, ['author', 'bookName', 'book', 'rating'])
             })
         }
 

@@ -61,10 +61,15 @@ const User = {
               username: `${data.firstName.toLowerCase()}_yab${Math.floor(Math.random() * 1001) + 1}`,
               phoneNumber: `${data.phoneNumber}`  
             }
+          },
+          followers: {
+            create: {
+              followers: []
+            }
           }
         }
       });
-      // if (result) return true;
+
       return result;
     },
   
@@ -96,10 +101,7 @@ const User = {
         return user
       },
   
-    //   async remove(userData) {
-    //     return "Not implemented";
-    //   },
-      
+
 }
 
 module.exports = User

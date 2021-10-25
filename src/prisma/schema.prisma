@@ -18,6 +18,7 @@ model user {
   interest user_interest?
   account account?
   profile profile?
+  followers followers?
   books book[]
   isVerified Boolean @default(false)
   createdAt DateTime @default(now())
@@ -91,8 +92,37 @@ model book {
   bookNumber String @unique
   category String 
   rating Json?
+  reading reading[]
+  finished_books finished_books[]
   interest interest @relation(fields: [category], references: [id])
   user user @relation(fields: [author], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model followers {
+  id String @id @default(uuid())
+  userId String @unique
+  followers String[]
+  user user @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model reading {
+  id String @id @default(uuid())
+  userId String @unique
+  bookId String 
+  book book @relation(fields: [bookId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model finished_books {
+  id String @id @default(uuid())
+  userId String @unique
+  bookId String 
+  book book @relation(fields: [bookId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

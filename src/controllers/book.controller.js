@@ -28,7 +28,6 @@ bookController.getAllBooks = async (req, res) => {
 
 bookController.getSuggestedBooks = async (req, res) => {
     try {
-        // console.log(req)
         const books = await bookService.getSuggestedBooks(req)
         Response.SUCCESS({response: res, data: books, message: "Request successfully"})
     } catch(error) {
@@ -40,7 +39,6 @@ bookController.getSuggestedBooks = async (req, res) => {
 
 bookController.rateBook = async (req, res) => {
     try {
-        // console.log(req)
         const books = await bookService.addRatings(req.body)
         Response.SUCCESS({response: res, data: books, message: "Request successfully"})
     } catch(error) {
@@ -49,6 +47,35 @@ bookController.rateBook = async (req, res) => {
     }
 };
 
+bookController.getNewBooks = async (req, res) => {
+    try {
+        const books = await bookService.getSuggestedBooks(req)
+        Response.SUCCESS({response: res, data: books, message: "Request successfully"})
+    } catch(error) {
+        const errors = validateErrorFormatter(error)
+		return Response.INVALID_REQUEST({ response: res, errors })
+    }
+};
+
+bookController.getReadingBooks = async (req, res) => {
+    try{
+        const result = await bookService.getReadingBooks(req)
+        return Response.SUCCESS({ response: res, data: result, message: "Request Successful" })
+    } catch(err) {
+       const errors = await validateErrorFormatter(err) 
+       return Response.INVALID_REQUEST({ response: res, errors})
+    }
+}
+
+bookController.getFinishedBooks = async (req, res) => {
+    try{
+        const result = await bookService.getFinishedBooks(req)
+        return Response.SUCCESS({ response: res, data: result, message: "Request Successful" })
+    } catch(err) {
+       const errors = await validateErrorFormatter(err) 
+       return Response.INVALID_REQUEST({ response: res, errors})
+    }
+}
 
 
 

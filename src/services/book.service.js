@@ -6,6 +6,8 @@ const  _ = require("lodash");
 const UserInterest = require("../data-access/userInterest.dao");
 const ratingService = require("./rating.service");
 const User = require("../data-access/user.dao");
+const Reading = require("../data-access/reading.dao");
+const Finished = require("../data-access/finished.dao");
 
 const bookService = {}
 
@@ -47,6 +49,7 @@ bookService.getAllBooks = async () => {
     const books = await Book.findAll()
     return books
 }
+
 
 bookService.getSuggestedBooks = async ({user}) => {
     const userInterest = await UserInterest.findByUserId(user)
@@ -96,7 +99,7 @@ bookService.addRatings = async ({bookId, rating}) => {
 
 
   const response = await Book.updateBookRating({bookId, data})
-  
+
   if(response) {
     const authorBooks = await Book.findAllByAuthor(result.author)
   
@@ -115,5 +118,14 @@ bookService.addRatings = async ({bookId, rating}) => {
   return
 }
 
+bookService.getReadingBooks = async ({user}) => {
+    const result = await Reading.findByUserId(user)
+    return result
+}
+
+bookService.getFinishedBooks = async ({user}) => {
+    const result = await Finished.findByUserId(user)
+    return result
+}
 
 module.exports = bookService
