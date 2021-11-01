@@ -22,7 +22,7 @@ authValidation.registerValidation = (data) => {
         }),
         phoneNumber: Joi.string().required().messages({
             "number.base": "Phone number must be a number",
-            "number.empty": "Phine number field is required",
+            "number.empty": "Phone number field is required",
             "any.required": "Phone number is required"
         }),
         password: Joi.string().min(6).required().messages({

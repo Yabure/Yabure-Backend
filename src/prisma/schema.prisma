@@ -14,9 +14,12 @@ model user {
   id String @id @default(uuid()) 
   email String @unique
   password String
+  average_rating Float? @default(0)
   interest user_interest?
   account account?
   profile profile?
+  followers followers?
+  books book[]
   isVerified Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -34,6 +37,7 @@ model interest {
   id String @id @default(uuid()) 
   field String @unique
   interests String[] 
+  book book[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -44,7 +48,7 @@ model profile {
   fullName String
   username String @unique
   picture String  @default("null")
-  phoneNumber String @unique
+  phoneNumber String
   notes Int @default(0)
   streams Int @default(0)
   user user @relation(fields: [userId], references: [id])
@@ -77,6 +81,48 @@ model rule {
   id String @id @default(uuid()) 
   type String @unique
   rule String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model book {
+  id String @id @default(uuid())
+  author String 
+  bookName String
+  bookNumber String @unique
+  category String 
+  rating Json?
+  reading reading[]
+  finished_books finished_books[]
+  interest interest @relation(fields: [category], references: [id])
+  user user @relation(fields: [author], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model followers {
+  id String @id @default(uuid())
+  userId String @unique
+  followers String[]
+  user user @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model reading {
+  id String @id @default(uuid())
+  userId String @unique
+  bookId String 
+  book book @relation(fields: [bookId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model finished_books {
+  id String @id @default(uuid())
+  userId String @unique
+  bookId String 
+  book book @relation(fields: [bookId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

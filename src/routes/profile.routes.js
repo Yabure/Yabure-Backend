@@ -1,10 +1,11 @@
-const proflieController = require("../controllers/profile.controller")
+const profileController = require("../controllers/profile.controller");
 
-const rule = (fastify, options, next) => {
-    fastify.get("/", proflieController.getProfile)
-    fastify.post("/upload", proflieController.uploadPicture);
-    fastify.post("/", proflieController.addProfile);
+const profile = (fastify, options, next) => {
+    fastify.get("/", profileController.getProfile)
+    fastify.post("/upload", profileController.uploadPicture);
+    fastify.post("/", profileController.addProfile);
+    fastify.post("/change-password", profileController.changePassword)
     next();
 }
 
-module.exports = rule
+module.exports = profile

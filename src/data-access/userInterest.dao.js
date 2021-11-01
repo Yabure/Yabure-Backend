@@ -27,7 +27,12 @@ const UserInterest = {
         return result
       },
 
-      async findByUuid(id) {
+      async findById(id) {
+        const result = await prisma.user_interest.findUnique({where: {id}})
+        return result
+      },
+
+      async findByUserId(id) {
         const result = await prisma.user_interest.findUnique({where: {userId: id}})
         return result
       }
