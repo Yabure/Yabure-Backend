@@ -28,13 +28,15 @@ const Book = {
     },
 
     async findOne(id) {
+        console.log(id)
         const data = await prisma.book.findUnique({
             where: {
                 id
             }
         })
-
-        return data
+        console.log(data)
+        data.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${data.bookNumber}`
+        return  _.pick(data, ['id', 'author', 'bookName', 'book', 'rating'])
     },
 
     async findByCategory(category) {

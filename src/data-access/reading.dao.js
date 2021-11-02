@@ -13,11 +13,16 @@ const Reading = {
 
         if(result.length > 0) {
             result = result.map(res => {
-                res.book.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${res.bookNumber}`
+                res.book.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${res.book.bookNumber}`
                 return  _.pick(res.book, ['id', 'author', 'bookName', 'book', 'rating'])
             })
         }
         
+        return result;
+    },
+
+    async insert(data){
+        const result = await prisma.reading.create({data});
         return result;
     },
 

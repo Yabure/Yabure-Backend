@@ -111,7 +111,7 @@ model followers {
 
 model reading {
   id String @id @default(uuid())
-  userId String @unique
+  userId String 
   bookId String 
   book book @relation(fields: [bookId], references: [id])
   createdAt DateTime @default(now())
@@ -120,7 +120,7 @@ model reading {
 
 model finished_books {
   id String @id @default(uuid())
-  userId String @unique
+  userId String 
   bookId String 
   book book @relation(fields: [bookId], references: [id])
   createdAt DateTime @default(now())

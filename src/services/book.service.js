@@ -11,7 +11,7 @@ const Finished = require("../data-access/finished.dao");
 
 const bookService = {}
 
-bookService.uploadPdf = async({body, user}) => {
+bookService.uploadBook = async({body, user}) => {
     if(!body.bookName || !body.bookName.value.trim()) throw new Error("Book Name is required")
     if(!body.categoryId || !body.categoryId.value.trim()) throw new Error("Category is required")
 
@@ -19,12 +19,12 @@ bookService.uploadPdf = async({body, user}) => {
     if(!interest) throw new Error("Category does not exist");
 
 
-    const imgName = await fileSystem.uploadPdf(body.book)
+    const bookNumber = await fileSystem.uploadBook(body.book)
 
     const data = {
         author: user,
         bookName: body.bookName.value,
-        bookNumber: imgName,
+        bookNumber,
         category: body.categoryId.value,
         rating: {
           one_star: 0,
@@ -38,9 +38,7 @@ bookService.uploadPdf = async({body, user}) => {
 
 
     await Book.insert(data)
-    Profile.addNotes(user)
-    
-
+    await Profile.addNotes(user)
 
     return true
 }
@@ -118,14 +116,38 @@ bookService.addRatings = async ({bookId, rating}) => {
   return
 }
 
+bookService.getSingleBook = async (id) => {
+  const result = await Book.findOne(id)
+  return result
+}
+
 bookService.getReadingBooks = async ({user}) => {
     const result = await Reading.findByUserId(user)
     return result
 }
 
+bookService.addReadingBooks = async ({user, body}) => {
+  await Reading.insert({
+    userId: user,
+    bookId: body.book
+  })
+
+  return
+}
+
+
 bookService.getFinishedBooks = async ({user}) => {
     const result = await Finished.findByUserId(user)
     return result
+}
+
+bookService.addFinishedBooks = async ({user, body}) => {
+  await Finished.insert({
+    userId: user,
+    bookId: body.book
+  })
+
+  return
 }
 
 module.exports = bookService
