@@ -107,6 +107,46 @@ bookController.addFinishedBooks = async (req, res) => {
     }
 }
 
+bookController.addExplanation = async (req, res) => {
+    try{
+        await bookService.addExplanation(req)
+        return Response.SUCCESS({ response: res, data: {}, message: "Request Successful" })
+    } catch(err) {
+       const errors = await validateErrorFormatter(err) 
+       return Response.INVALID_REQUEST({ response: res, errors})
+    }
+}
+
+bookController.addComments = async (req, res) => {
+    try{
+        await bookService.addComments(req)
+        return Response.SUCCESS({ response: res, data: {}, message: "Request Successful" })
+    } catch(err) {
+       const errors = await validateErrorFormatter(err) 
+       return Response.INVALID_REQUEST({ response: res, errors})
+    }
+}
+
+bookController.getExplanations = async (req, res) => {
+    try{
+        const result = await bookService.getExplanations(req)
+        return Response.SUCCESS({ response: res, data: result, message: "Request Successful" })
+    } catch(err) {
+       const errors = await validateErrorFormatter(err) 
+       return Response.INVALID_REQUEST({ response: res, errors})
+    }
+}
+
+bookController.getExplanationsComments = async (req, res) => {
+    try{
+        const result = await bookService.getExplanationsComments(req)
+        return Response.SUCCESS({ response: res, data: result, message: "Request Successful" })
+    } catch(err) {
+       const errors = await validateErrorFormatter(err) 
+       return Response.INVALID_REQUEST({ response: res, errors})
+    }
+}
+
 
 
 module.exports = bookController  

@@ -19,7 +19,11 @@ model user {
   account account?
   profile profile?
   followers followers?
+  comments comments[]
   books book[]
+  finished_books finished_books[]
+  reading reading[]
+  explanations explanations[]
   isVerified Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -91,6 +95,7 @@ model book {
   bookName String
   bookNumber String @unique
   category String 
+  explanations explanations?
   rating Json?
   reading reading[]
   finished_books finished_books[]
@@ -114,6 +119,7 @@ model reading {
   userId String 
   bookId String 
   book book @relation(fields: [bookId], references: [id])
+  user user @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -123,6 +129,31 @@ model finished_books {
   userId String 
   bookId String 
   book book @relation(fields: [bookId], references: [id])
+  user user @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model explanations {
+  id String @id @default(uuid())
+  userId String 
+  bookId String @unique
+  explanations String[]
+  comments comments[]
+  book book @relation(fields: [bookId], references: [id])
+  user user @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model comments {
+  id String @id @default(uuid())
+  userId String 
+  explanationsId String
+  comment String
+  replies String[]
+  explanations explanations @relation(fields: [explanationsId], references: [id])
+  user user @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

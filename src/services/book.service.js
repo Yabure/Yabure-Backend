@@ -8,6 +8,9 @@ const ratingService = require("./rating.service");
 const User = require("../data-access/user.dao");
 const Reading = require("../data-access/reading.dao");
 const Finished = require("../data-access/finished.dao");
+const Explanation = require("../data-access/explanation.dao");
+const { bool } = require("joi");
+const Comments = require("../data-access/comments.dao");
 
 const bookService = {}
 
@@ -150,4 +153,53 @@ bookService.addFinishedBooks = async ({user, body}) => {
   return
 }
 
+bookService.addExplanation = async ({user, body}) => {
+  if(!body || !body.audio) throw new Error("Audio is required")
+ 
+  const book = await Book.findOneWithExplanation(body.bookId.value)
+
+  if(!book) throw new Error("Book does not exist")
+  if(book.author !== user) throw new Error("You can't add explanations to this book")
+
+
+  const audio = await fileSystem.uploadAudio(body.audio)
+  let data = {
+    user
+  }
+
+  data.explanations = [audio]
+  if(book.explanations !== null && book.explanations.explanations.length > 0) {
+    book.explanations.explanations.push(audio)
+    data.explanations = book.explanations.explanations
+  } 
+
+  await Explanation.insert(body.bookId.value, data)
+
+  return
+}
+
+bookService.addComments = async ({user, body}) => {
+  if(typeof(body.comment) !== "string") throw new Error("Comment must be a string")
+
+  await Comments.insert({
+    userId: user,
+    explanationsId: body.explanationsId,
+    comment: body.comment.trim(),
+    replies: []
+  })
+
+  return
+}
+
+bookService.getExplanations = async ({params}) => {
+  const result = await Explanation.findByBookId(params.bookId)
+
+  return result
+}
+
+bookService.getExplanationsComments = async ({params}) => {
+  const result = await Comments.findByExplanationId(params.explanationsId)
+
+  return result
+}
 module.exports = bookService

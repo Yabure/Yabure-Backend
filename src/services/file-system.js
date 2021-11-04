@@ -78,4 +78,23 @@ fileSystem.uploadBook = async (file) => {
     return fileName
 };
 
+fileSystem.uploadAudio = async (file) => {
+    const filetypes = /aac|wma|wav|mp3|mpeg/;
+
+    // Check ext
+    const extname = filetypes.test(path.extname(file.filename).toLowerCase());
+    // Check mime
+    const mimetype = filetypes.test(file.mimetype);
+  
+    if (!(mimetype && extname)) {
+      throw new Error("file type not supported", 400);
+    }
+
+
+    const url = await fileSystem.uploadFile("audio", file)
+    const fileName = await fileSystem.getFileName(url)
+    console.log(fileName)
+    return fileName
+}
+
 module.exports =  fileSystem

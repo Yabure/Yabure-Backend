@@ -28,15 +28,36 @@ const Book = {
     },
 
     async findOne(id) {
-        console.log(id)
         const data = await prisma.book.findUnique({
             where: {
                 id
             }
         })
-        console.log(data)
-        data.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${data.bookNumber}`
-        return  _.pick(data, ['id', 'author', 'bookName', 'book', 'rating'])
+        if(data) {
+            data.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${data.bookNumber}`
+            return  _.pick(data, ['id', 'author', 'bookName', 'book', 'rating'])
+        }
+        return data
+    },
+
+    async findOneWithExplanation(id) {
+        const data = await prisma.book.findUnique({
+            where: {
+                id
+            },
+            include: {
+                explanations: {
+                    select: {
+                        explanations: true
+                    }
+                }
+            }
+        })
+        if(data) {
+            data.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${data.bookNumber}`
+            return  _.pick(data, ['id', 'author', 'bookName', 'book', 'rating', 'explanations'])
+        }
+        return data
     },
 
     async findByCategory(category) {
