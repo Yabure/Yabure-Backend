@@ -6,11 +6,25 @@ const  _ = require("lodash");
 
 const Book = {
     async findAll() {
-        let result = await prisma.book.findMany();
+        let result = await prisma.book.findMany({
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        profile: {
+                            select: {
+                                fullName: true,
+                                username: true,
+                            }
+                        }
+                    }
+                }
+            }
+        });
         if(result) {
             result = result.map(res => {
                 res.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${res.bookNumber}`
-                return  _.pick(res, ['id', 'author', 'bookName', 'book', 'rating'])
+                return  _.pick(res, ['id', 'author', 'bookName', 'book', 'rating', 'user'])
             })
         }
 
@@ -21,6 +35,19 @@ const Book = {
         let result = await prisma.book.findMany({
             where: {
                 author: id
+            },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        profile: {
+                            select: {
+                                fullName: true,
+                                username: true,
+                            }
+                        }
+                    }
+                }
             }
         })
 
@@ -31,11 +58,24 @@ const Book = {
         const data = await prisma.book.findUnique({
             where: {
                 id
+            },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        profile: {
+                            select: {
+                                fullName: true,
+                                username: true,
+                            }
+                        }
+                    }
+                }
             }
         })
         if(data) {
             data.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${data.bookNumber}`
-            return  _.pick(data, ['id', 'author', 'bookName', 'book', 'rating'])
+            return  _.pick(data, ['id', 'author', 'bookName', 'book', 'rating', 'user'])
         }
         return data
     },
@@ -65,6 +105,19 @@ const Book = {
             where: {
                 category 
             },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        profile: {
+                            select: {
+                                fullName: true,
+                                username: true,
+                            }
+                        }
+                    }
+                }
+            },
             orderBy: {
                 createdAt: 'desc'
             }
@@ -72,7 +125,7 @@ const Book = {
         if(result) {
             result = result.map(res => {
                 res.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${res.bookNumber}`
-                return  _.pick(res, ['author', 'bookName', 'book', 'rating'])
+                return  _.pick(res, ['author', 'bookName', 'book', 'rating', 'user'])
             })
         }
 

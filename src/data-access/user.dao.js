@@ -58,7 +58,7 @@ const User = {
           profile: {
             create: {
               fullName: `${data.firstName} ${data.lastName}`,
-              username: `${data.firstName.toLowerCase()}_yab${Math.floor(Math.random() * 1001) + 1}`,
+              username: `${data.firstName.toLowerCase()}y${Math.floor(Math.random() * 1001) + 1}`,
               phoneNumber: `${data.phoneNumber}`  
             }
           },
