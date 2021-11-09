@@ -18,8 +18,12 @@ profileController.uploadPicture = async (req, res) => {
 
 profileController.getProfile = async (req, res) => {
     try {
+        if(req.params.id) {
+            const profile = await profileService.getProfileById(req.params)
+           return Response.SUCCESS({response: res, data: profile })
+        }
         const profile = await profileService.getProfile(req)
-        Response.SUCCESS({response: res, data: profile })
+        return Response.SUCCESS({response: res, data: profile })
     } catch(error) {
         const errors = validateErrorFormatter(error)
 		return Response.INVALID_REQUEST({ response: res, errors })

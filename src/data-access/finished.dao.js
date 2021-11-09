@@ -25,12 +25,11 @@ const Finished = {
             }
         });
 
-        console.log(result)
 
         if(result.length > 0) {
             result = result.map(res => {
                 res.book.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${res.book.bookNumber}`
-                return  _.pick(res.book, ['id', 'author', 'bookName', 'book', 'rating', 'user'])
+                return  _.pick(res.book, ['id', 'author', 'bookName', 'book', 'rating', 'user', 'createdAt'])
             })
         }
         

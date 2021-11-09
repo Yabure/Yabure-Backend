@@ -93,7 +93,6 @@ fileSystem.uploadAudio = async (file) => {
 
     const url = await fileSystem.uploadFile("audio", file)
     const fileName = await fileSystem.getFileName(url)
-    console.log(fileName)
     return fileName
 }
 

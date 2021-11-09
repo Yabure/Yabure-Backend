@@ -19,6 +19,23 @@ const Profile = {
         return result;
       },
 
+    async findByProfileId(id) {
+        const result = await prisma.profile.findFirst({ 
+            where: { id },
+            include: {
+                user: {
+                  select: {
+                    email: true,
+                  },
+                },
+            }
+        });
+        if(result) {
+          result.picture = result.picture !== "null" ? `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/profile/${result.picture}` : null
+        }
+        return result;
+      },
+
     async findByUserName(username) {
         const result = await prisma.profile.findFirst({ 
             where: { username },

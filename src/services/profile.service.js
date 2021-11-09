@@ -29,6 +29,12 @@ profileService.getProfile = async({user}) => {
     return userProfile
 }
 
+profileService.getProfileById = async ({id}) => {
+    const result = await  Profile.findByProfileId(id)
+    if(!result) throw new Error("user not found")
+    return result
+}
+
 profileService.addProfile = async ({user}, data) => {
     const userProfile = await Profile.findById(user)
     if(!userProfile) throw new Error("This user profile doesn't exists");

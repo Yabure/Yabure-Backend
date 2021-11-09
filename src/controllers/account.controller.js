@@ -13,7 +13,6 @@ accountController.verify = async (req, res) => {
         const account = await accountService.verify(validatedData);
 		return Response.SUCCESS({ response: res, data: account, message: "Verified Successfully"})
 	} catch(err){
-		console.log(err)
 		const errors = validateErrorFormatter(err)
 		return Response.INVALID_REQUEST({ response: res, errors     })
 	}
@@ -24,7 +23,6 @@ accountController.getBanks = async (req, res) => {
         const banks = await accountService.getBanks()
 		return Response.SUCCESS({ response: res, data: banks, message: "Fetched Successfully"})
 	} catch(err){
-		console.log(err)
 		const errors = validateErrorFormatter(err)
 		return Response.INVALID_REQUEST({ response: res, errors     })
 	}

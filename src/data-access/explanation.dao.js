@@ -42,7 +42,6 @@ const Explanation = {
     // },
 
     async insert(id, data) {
-        console.log(id)
         const result = await prisma.explanations.upsert({
           where: { bookId: id },
           update: { 

@@ -12,7 +12,6 @@ authController.register = async (request, response) => {
 		response.setCookie(process.env.SESSION_NAME, authToken, { path: '/'})
 		return Response.SUCCESS({ response, data, message: "Registered Successfully"})
 	} catch(err){
-		console.log("err here")
 		const errors = validateErrorFormatter(err)
 		return Response.INVALID_REQUEST({ response, errors, message: errors })
 	}

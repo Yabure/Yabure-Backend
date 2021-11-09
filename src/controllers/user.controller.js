@@ -10,12 +10,9 @@ userController.storeInterest = async (req, res) => {
     try{
         const interest = await interestValidation.interestValidation(req.body)
         const saved = await userService.storeInterest(interest, req.user)
-        console.log(saved)
         return Response.SUCCESS({ response: res, data: {}, message: "Interest added successfully"})
     } catch(err) {
-        console.log(err.message)
        const errors = await validateErrorFormatter(err) 
-       console.log(errors)
        return Response.INVALID_REQUEST({ response: res, errors})
     }
 }
