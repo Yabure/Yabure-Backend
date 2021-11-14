@@ -18,7 +18,7 @@ profileController.uploadPicture = async (req, res) => {
 
 profileController.getProfile = async (req, res) => {
     try {
-        if(req.params.id) {
+        if(req.params && req.params.id) {
             const profile = await profileService.getProfileById(req.params)
            return Response.SUCCESS({response: res, data: profile })
         }

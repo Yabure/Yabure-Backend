@@ -5,6 +5,7 @@ const auth = (fastify, options, next) => {
     fastify.post("/login", authController.login);
     fastify.post("/verify", authController.verifyUser);
     fastify.post("/resend-token", authController.resendVerification); 
+    fastify.post("/forgotPassword", authController.forgotPassword); 
     next();
 }
 

@@ -2,6 +2,7 @@ const authValidation = require("../validators/auth.validator")
 const validateErrorFormatter = require("../utils/validateErrorFormatter")
 const authService = require("../services/auth.service")
 const Response = require("../utils/errorResponse")
+const {FirebaseDynamicLinks} = require('firebase-dynamic-links');
 
 const authController = {}
 
@@ -52,6 +53,31 @@ authController.resendVerification = async (request, response) => {
 		const errors = validateErrorFormatter(err)
 		return Response.INVALID_REQUEST({ response, errors })
 	}
+}
+
+authController.forgotPassword = async (request, response) => {
+	try {
+		// AIzaSyBI9aPyEA4aCUl13CAnvuLNarEA5WhU2t8
+		const firebaseDynamicLinks = new FirebaseDynamicLinks("AIzaSyBI9aPyEA4aCUl13CAnvuLNarEA5WhU2t8");
+		const { shortLink, previewLink } = await firebaseDynamicLinks.createLink({
+			dynamicLinkInfo: {
+			  domainUriPrefix: 'https://yabure.page.link',
+			  link: 'https://www.yabure.page.link/',
+			  androidInfo: {
+				androidPackageName: 'com.example.android',
+			  },
+			  iosInfo: {
+				iosBundleId: 'com.example.ios',
+			  },
+			},
+		});
+
+		return Response.SUCCESS({ response, data: {shortLink, previewLink }, message: "Sent Successfully"})
+	} catch(err){
+		// const errors = validateErrorFormatter(err)
+		return Response.INVALID_REQUEST({ response, errors: err })
+	}
+	  
 }
 
 module.exports = authController

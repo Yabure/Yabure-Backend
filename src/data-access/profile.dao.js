@@ -9,11 +9,25 @@ const Profile = {
                 user: {
                   select: {
                     email: true,
+                    books: {
+                      select: {
+                        bookNumber: true,
+                        bookName: true,
+                        rating: true,
+                      }
+                    }
                   },
                 },
             }
         });
         if(result) {
+          result.user.books = result.user.books.map((res) => {
+            return {
+              ...res,
+              book: `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${res.bookNumber}`
+            }
+          })
+          
           result.picture = result.picture !== "null" ? `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/profile/${result.picture}` : null
         }
         return result;

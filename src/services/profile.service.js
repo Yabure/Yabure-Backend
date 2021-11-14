@@ -30,7 +30,7 @@ profileService.getProfile = async({user}) => {
 }
 
 profileService.getProfileById = async ({id}) => {
-    const result = await  Profile.findByProfileId(id)
+    const result = await  Profile.findById(id)
     if(!result) throw new Error("user not found")
     return result
 }
