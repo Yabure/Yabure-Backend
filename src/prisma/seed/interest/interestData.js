@@ -48,7 +48,7 @@ const Interest = [
         ]
     },
     {
-        field: "Science",
+        field: "Civil Science",
         interest: [
             "Architecture", 
             "Building", 
@@ -98,7 +98,7 @@ const Interest = [
         ]
     },
     {
-        field: " Management Science ",
+        field: "Management Science",
         interest: [
             "Accounting",
             "Actuarial Science and Insurance",

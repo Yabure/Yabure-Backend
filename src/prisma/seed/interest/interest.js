@@ -10,7 +10,7 @@ const seedInterest = async (prisma) => {
             interests: interest.interest
           },
           create: {
-            field: interest.field,
+            field: interest.field.toLowerCase(),
             interests: interest.interest,
           },
     })

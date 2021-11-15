@@ -7,6 +7,15 @@ const Interest = {
         return result;
       },
 
+    async findByCategory(field) {
+        const result = await prisma.interest.findFirst({
+          where: {
+            field 
+          }
+        });
+        return result;
+      },
+
     async findById(id){
       const result = await prisma.interest.findUnique({
         where: {id}

@@ -147,6 +147,16 @@ bookController.getExplanationsComments = async (req, res) => {
     }
 }
 
+bookController.replyComment = async (req, res) => {
+    try {
+        const result = await bookService.replyComment(req)
+        return Response.SUCCESS({ response: res, data: result, message: "Request Successful" })
+    } catch(err) {
+        const errors = await validateErrorFormatter(err) 
+        return Response.INVALID_REQUEST({ response: res, errors})
+    }
+}
+
 
 
 module.exports = bookController  

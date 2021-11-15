@@ -151,7 +151,7 @@ model comments {
   userId String 
   explanationsId String
   comment String
-  replies String[]
+  replies Json[]
   explanations explanations @relation(fields: [explanationsId], references: [id])
   user user @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())

@@ -1,7 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
-const { find, orderBy } = require("lodash");
 const prisma = new PrismaClient({errorFormat: 'minimal'})
 const  _ = require("lodash");
+
 
 
 const Book = {
@@ -21,6 +21,102 @@ const Book = {
                 }
             }
         });
+        if(result) {
+            result = result.map(res => {
+                res.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${res.bookNumber}`
+                return  _.pick(res, ['id', 'author', 'bookName', 'book', 'rating', 'user',  'createdAt'])
+            })
+        }
+
+        return result;
+    },
+
+    async findByInterest(id, search) {
+        console.log(search)
+        if(search) {
+            let result = await prisma.book.findMany({
+                where: {
+                    category: id,
+                    bookName: {
+                        contains: search
+                    }
+                },
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            profile: {
+                                select: {
+                                    fullName: true,
+                                    username: true,
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            if(result) {
+                result = result.map(res => {
+                    res.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${res.bookNumber}`
+                    return  _.pick(res, ['id', 'author', 'bookName', 'book', 'rating', 'user',  'createdAt'])
+                })
+            }
+            
+            return result
+        };
+
+        let result = await prisma.book.findMany({
+            where: {
+                category: id
+            },
+                   include: {
+                user: {
+                    select: {
+                        id: true,
+                        profile: {
+                            select: {
+                                fullName: true,
+                                username: true,
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        console.log(result)
+        if(result) {
+            result = result.map(res => {
+                res.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${res.bookNumber}`
+                return  _.pick(res, ['id', 'author', 'bookName', 'book', 'rating', 'user',  'createdAt'])
+            })
+        }
+        
+        return result
+    },
+
+    async searchByName(text) {
+        console.log(text)
+        let result = await prisma.book.findMany({
+            where: {
+                bookName: {
+                    contains: text,
+                }
+            },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        profile: {
+                            select: {
+                                fullName: true,
+                                username: true,
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        console.log(result)
         if(result) {
             result = result.map(res => {
                 res.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${res.bookNumber}`

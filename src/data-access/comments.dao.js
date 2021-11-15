@@ -1,6 +1,7 @@
 const { PrismaClient } = require("@prisma/client")
 const prisma = new PrismaClient({errorFormat: 'minimal'})
 const  _ = require("lodash");
+const { update } = require("./profile.dao");
 
 const Comments = {
     async findByExplanationId(id) {
@@ -41,6 +42,31 @@ const Comments = {
         }
         
         return [];
+    },
+
+
+    async findById(id) {
+        const result = await prisma.comments.findFirst({
+            where: {
+                id
+            }
+        })
+
+        return result
+    },
+
+    async update(id, data){
+
+        const result = await prisma.comments.update({
+            where: {
+                id
+            },
+            data: {
+                replies: data
+            }
+        })
+
+        return result
     },
 
     // async comments

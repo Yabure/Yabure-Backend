@@ -26,7 +26,7 @@ bookService.uploadBook = async({body, user}) => {
 
     const data = {
         author: user,
-        bookName: body.bookName.value,
+        bookName: body.bookName.value.toLowerCase(),
         bookNumber,
         category: body.categoryId.value,
         rating: {
@@ -202,4 +202,31 @@ bookService.getExplanationsComments = async ({params}) => {
 
   return result
 }
+
+bookService.replyComment = async ({body, user}) => {
+  if(!body) throw new Error("Invalid body data")
+  if(!body.commentId) throw new Error("No comment is specfied")
+  if(!body.reply || typeof(body.reply) !== "string") throw new Error("Reply must be a string and should not be empty")
+
+
+  const comment = await Comments.findById(body.commentId)
+  if(!comment) throw new Error("Comments does not exist")
+  
+  const {userId, username, fullName, picture} = await Profile.findById(user)
+
+
+  comment.replies.push({
+    "userId": userId,
+    "fullName": fullName,
+    "username": username,
+    "picture": picture,
+    "reply": body.reply
+  })
+
+  await Comments.update(body.commentId, comment.replies)
+
+  return []
+}
+
+
 module.exports = bookService
