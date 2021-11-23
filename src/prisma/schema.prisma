@@ -137,8 +137,8 @@ model finished_books {
 model explanations {
   id String @id @default(uuid())
   userId String 
-  bookId String @unique
-  explanations String[]
+  bookId String
+  explanation String
   comments comments[]
   book book @relation(fields: [bookId], references: [id])
   user user @relation(fields: [userId], references: [id])

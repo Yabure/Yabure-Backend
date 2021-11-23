@@ -130,10 +130,16 @@ bookService.getReadingBooks = async ({user}) => {
 }
 
 bookService.addReadingBooks = async ({user, body}) => {
-  await Reading.insert({
+  const data = {
     userId: user,
     bookId: body.book
-  })
+  }
+
+  const result = await Reading.findOne(data)
+  if(result) throw new Error("Book already added to your reading list")
+  
+
+  await Reading.insert(data)
 
   return
 }
@@ -145,6 +151,14 @@ bookService.getFinishedBooks = async ({user}) => {
 }
 
 bookService.addFinishedBooks = async ({user, body}) => {
+  const data = {
+    userId: user,
+    bookId: body.book
+  }
+
+  const result = await Finished.findOne(data)
+  if(result) throw new Error("Book already added to your finished list")
+
   await Finished.insert({
     userId: user,
     bookId: body.book
@@ -156,7 +170,7 @@ bookService.addFinishedBooks = async ({user, body}) => {
 bookService.addExplanation = async ({user, body}) => {
   if(!body || !body.audio) throw new Error("Audio is required")
  
-  const book = await Book.findOneWithExplanation(body.bookId.value)
+  const book = await Book.findOne(body.bookId.value)
 
   if(!book) throw new Error("Book does not exist")
   if(book.author !== user) throw new Error("You can't add explanations to this book")
@@ -164,22 +178,25 @@ bookService.addExplanation = async ({user, body}) => {
 
   const audio = await fileSystem.uploadAudio(body.audio)
   let data = {
-    user
+    userId: user,
+    bookId: book.id,
+    explanation: audio
   }
 
-  data.explanations = [audio]
-  if(book.explanations !== null && book.explanations.explanations.length > 0) {
-    book.explanations.explanations.push(audio)
-    data.explanations = book.explanations.explanations
-  } 
 
-  await Explanation.insert(body.bookId.value, data)
+
+  await Explanation.insertOne(data)
 
   return
 }
 
 bookService.addComments = async ({user, body}) => {
   if(typeof(body.comment) !== "string") throw new Error("Comment must be a string")
+
+  const explanation = await Explanation.findOne(body.explanationsId)
+  if(!explanation) throw new Error("Explanation does not exist")
+
+
 
   await Comments.insert({
     userId: user,

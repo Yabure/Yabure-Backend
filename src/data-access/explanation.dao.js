@@ -1,10 +1,11 @@
 const { PrismaClient } = require("@prisma/client")
 const prisma = new PrismaClient({errorFormat: 'minimal'})
 const  _ = require("lodash");
+const { findOne } = require("./book.dao");
 
 const Explanation = {
     async findByBookId(id) {
-        let result = await prisma.explanations.findUnique({ 
+        let result = await prisma.explanations.findMany({ 
             where: { bookId: id },
             include: {
                 user: {
@@ -22,17 +23,33 @@ const Explanation = {
             }
         });
 
-        if(result) {
-            result.explanations = result.explanations !== "null" ? 
-                result.explanations.map(res => {
-                    return `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/audio/${res}`
-                })
-            : null
-            result.user.profile.picture = result.user.profile.picture !== "null" ? `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/profile/${result.user.profile.picture}` : null
-            return result;
+        if(result.length !== 0) {
+
+            result = result.map(res => {
+                return {
+                    ...res,
+                    explanation: `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/audio/${res.explanation}`,
+                    user: {
+                        ...res.user,
+                        profile: {
+                            ...res.user.profile,
+                            picture: `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/profile/${res.user.profile.picture}`
+
+                        }
+                    }
+                }
+            })
         }
 
-        return []
+        return [result]
+    },
+
+    async findOne(id) {
+        let result = await prisma.explanations.findUnique({
+            where: {id}
+        })
+
+        return result
     },
 
 
@@ -45,17 +62,25 @@ const Explanation = {
         const result = await prisma.explanations.upsert({
           where: { bookId: id },
           update: { 
-              explanations: data.explanations
+              explanation: data.explanation
           },
           create: {
               userId: data.user, 
               bookId: id,
-              explanations: data.explanations 
+              explanation: data.explanation
           },
         })
         return result
       },
 
+
+    async insertOne(data){
+        const result = await prisma.explanations.create({
+            data
+        })
+
+        return result
+    }
 
     // async update(data) {
     //     const result = await prisma.rating.upsert({ 

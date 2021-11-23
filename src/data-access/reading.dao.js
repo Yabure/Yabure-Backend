@@ -35,6 +35,17 @@ const Reading = {
         return result;
     },
 
+    async findOne ({userId, bookId}){
+        const result = await prisma.reading.findFirst({
+            where: {
+                userId,
+                bookId,
+            }
+        })
+
+        return result
+    },
+
     async insert(data){
         const result = await prisma.reading.create({data});
         return result;

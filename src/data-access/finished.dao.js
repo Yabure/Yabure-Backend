@@ -36,6 +36,18 @@ const Finished = {
         return result;
     },
 
+
+    async findOne ({userId, bookId}){
+        const result = await prisma.finished_books.findFirst({
+            where: {
+                userId,
+                bookId,
+            }
+        })
+
+        return result
+    },
+
     async insert(data) {
         const result = await prisma.finished_books.create({data})
         return result

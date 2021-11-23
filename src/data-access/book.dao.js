@@ -116,7 +116,7 @@ const Book = {
                 }
             }
         });
-        console.log(result)
+ 
         if(result) {
             result = result.map(res => {
                 res.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${res.bookNumber}`
