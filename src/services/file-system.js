@@ -79,7 +79,7 @@ fileSystem.uploadBook = async (file) => {
 };
 
 fileSystem.uploadAudio = async (file) => {
-    const filetypes = /aac|wma|wav|mp3|mpeg/;
+    const filetypes = /aac|wma|wav|mp3|mpeg|mp4/;
 
     // Check ext
     const extname = filetypes.test(path.extname(file.filename).toLowerCase());
