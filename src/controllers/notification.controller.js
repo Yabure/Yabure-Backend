@@ -2,7 +2,7 @@ const validateErrorFormatter = require("../utils/validateErrorFormatter")
 const Response = require("../utils/errorResponse")
 // const interestValidation = require("../validators/interest.Validation")
 // const userInterestService = require("../services/user.service")
-const { requestPermission, sendPushNotification, activateNotification } = require("../services/notification.service")
+const { sendPushNotification, activateNotification } = require("../services/notification.service")
 
 const notification = {}
 
@@ -16,15 +16,15 @@ notification.activate = async (req, res) => {
     }
 }
 
-notification.requestPermission = async (req, res) => {
-    try{
-        await requestPermission()
-        return Response.SUCCESS({ response: res, data: "Interest added successfully"})
-    } catch(err) {
-       const errors = await validateErrorFormatter(err) 
-       return Response.INVALID_REQUEST({ response: res, errors})
-    }
-}
+// notification.requestPermission = async (req, res) => {
+//     try{
+//         await requestPermission()
+//         return Response.SUCCESS({ response: res, data: "Interest added successfully"})
+//     } catch(err) {
+//        const errors = await validateErrorFormatter(err) 
+//        return Response.INVALID_REQUEST({ response: res, errors})
+//     }
+// }
 
 notification.sendNotification = async (req, res) => {
     try{
@@ -38,7 +38,7 @@ notification.sendNotification = async (req, res) => {
             const message = {
                 notification: {
                     title: "Testing boss",
-                    body: "just testing stuff"
+                    body: "just testing stuff",
                 },
                 token: dev
             }

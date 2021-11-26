@@ -15,7 +15,7 @@ const Comments = require("../data-access/comments.dao");
 const bookService = {}
 
 bookService.uploadBook = async({body, user}) => {
-    if(!body.bookName || !body.bookName.value.trim()) throw new Error("Book Name is required")
+    // if(!body.bookName || !body.bookName.value.trim()) throw new Error("Book Name is required")
     if(!body.categoryId || !body.categoryId.value.trim()) throw new Error("Category is required")
 
     const interest = await Interest.findById(body.categoryId.value)
@@ -26,7 +26,8 @@ bookService.uploadBook = async({body, user}) => {
 
     const data = {
         author: user,
-        bookName: body.bookName.value.toLowerCase(),
+        // bookName: body.bookName.value.toLowerCase(),
+        bookName: `book ${Math.round(Math.random() * 1000)}`,
         bookNumber,
         category: body.categoryId.value,
         rating: {
@@ -177,6 +178,7 @@ bookService.addExplanation = async ({user, body}) => {
 
 
   const audio = await fileSystem.uploadAudio(body.audio)
+  console.log(book.id)
   let data = {
     userId: user,
     bookId: book.id,
@@ -185,7 +187,7 @@ bookService.addExplanation = async ({user, body}) => {
 
 
 
-  await Explanation.insertOne(data)
+  console.log(await Explanation.insertOne(data))
 
   return
 }

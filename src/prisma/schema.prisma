@@ -96,7 +96,7 @@ model book {
   bookName String
   bookNumber String @unique
   category String 
-  explanations explanations?
+  explanations explanations[]
   rating Json?
   reading reading[]
   finished_books finished_books[]

@@ -79,6 +79,8 @@ const Explanation = {
             data
         })
 
+        console.log(result)
+
         return result
     }
 
