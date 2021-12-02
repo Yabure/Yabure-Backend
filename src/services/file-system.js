@@ -62,6 +62,7 @@ fileSystem.uploadImage = async (image) => {
 };
 
 fileSystem.uploadBook = async (file) => {
+  try {
     console.log("eeee", file)
     const filetypes = /pdf|epub/;
     // Check ext
@@ -77,6 +78,10 @@ fileSystem.uploadBook = async (file) => {
     const url = await fileSystem.uploadFile("books", file)
     const fileName = fileSystem.getFileName(url)
     return fileName
+  }catch(error) {
+    console.log(error)
+    throw new Error(error)
+  }
 };
 
 fileSystem.uploadAudio = async (file) => {
@@ -96,7 +101,7 @@ fileSystem.uploadAudio = async (file) => {
     const url = await fileSystem.uploadFile("audio", file)
     const fileName = await fileSystem.getFileName(url)
     return fileName
-    
+
   }catch(error) {
     console.log(error)
     throw new Error(error)
