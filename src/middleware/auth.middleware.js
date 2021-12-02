@@ -13,7 +13,9 @@ const authMiddleWare = (fastify) => {
         if(route === '') {
             try {
                 const token = request.cookies[SESSION_NAME]
+                // console.log(token)
                 const user = jwtUtils.decrypt(token)
+                // console.log(user)
                 return request.user = user.id
             } catch (err) {
                 return Response.INVALID_REQUEST({response, errors: "Unauthorized"})

@@ -109,6 +109,7 @@ bookController.addFinishedBooks = async (req, res) => {
 }
 
 bookController.addExplanation = async (req, res) => {
+    console.log(req)
     try{
         await bookService.addExplanation(req)
         return Response.SUCCESS({ response: res, data: {}, message: "Request Successful" })

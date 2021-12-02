@@ -62,6 +62,7 @@ fileSystem.uploadImage = async (image) => {
 };
 
 fileSystem.uploadBook = async (file) => {
+  console.log("eeee", file)
     const filetypes = /pdf|epub/;
     // Check ext
     const extname = filetypes.test(path.extname(file.filename).toLowerCase());
@@ -79,7 +80,8 @@ fileSystem.uploadBook = async (file) => {
 };
 
 fileSystem.uploadAudio = async (file) => {
-    const filetypes = /aac|wma|wav|mp3|mpeg|mp4/;
+  // console.log("eeee", file)
+    const filetypes = /aac|wma|wav|mp3|mpeg|mp4|m4a/;
 
     // Check ext
     const extname = filetypes.test(path.extname(file.filename).toLowerCase());

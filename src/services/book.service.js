@@ -16,18 +16,22 @@ const bookService = {}
 
 bookService.uploadBook = async({body, user}) => {
     // if(!body.bookName || !body.bookName.value.trim()) throw new Error("Book Name is required")
-    if(!body.categoryId || !body.categoryId.value.trim()) throw new Error("Category is required")
+    // console.log(body)
+    if(!body || !body.categoryId || !body.categoryId.value.trim()) throw new Error("CategoryId is required")
 
     const interest = await Interest.findById(body.categoryId.value)
     if(!interest) throw new Error("Category does not exist");
+
+
+    // console.log("eeee", body.book.fields.book)
 
 
     const bookNumber = await fileSystem.uploadBook(body.book)
 
     const data = {
         author: user,
-        // bookName: body.bookName.value.toLowerCase(),
-        bookName: `book ${Math.round(Math.random() * 1000)}`,
+        bookName: body.bookName.value.toLowerCase(),
+        // bookName: `book ${Math.round(Math.random() * 1000)}`,
         bookNumber,
         category: body.categoryId.value,
         rating: {
@@ -46,7 +50,7 @@ bookService.uploadBook = async({body, user}) => {
 
     return true
 }
-
+https://pace.africa/get-started
 bookService.getAllBooks = async () => {
     const books = await Book.findAll()
     return books
@@ -169,6 +173,7 @@ bookService.addFinishedBooks = async ({user, body}) => {
 }
 
 bookService.addExplanation = async ({user, body}) => {
+  console.log(body)
   if(!body || !body.audio) throw new Error("Audio is required")
  
   const book = await Book.findOne(body.bookId.value)
