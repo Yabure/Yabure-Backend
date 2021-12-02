@@ -16,8 +16,8 @@ const bookService = {}
 
 bookService.uploadBook = async({body, user}) => {
   console.log("eeee", body)
-    // if(!body.bookName || !body.bookName.value.trim()) throw new Error("Book Name is required")
-    // console.log(body)
+    if(!body.bookName || !body.bookName.value.trim()) throw new Error("Book Name is required")
+    console.log(body)
     if(!body || !body.categoryId || !body.categoryId.value.trim()) throw new Error("CategoryId is required")
 
     const interest = await Interest.findById(body.categoryId.value)
