@@ -62,7 +62,7 @@ fileSystem.uploadImage = async (image) => {
 };
 
 fileSystem.uploadBook = async (file) => {
-  console.log("eeee", file)
+    console.log("eeee", file)
     const filetypes = /pdf|epub/;
     // Check ext
     const extname = filetypes.test(path.extname(file.filename).toLowerCase());
