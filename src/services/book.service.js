@@ -15,6 +15,7 @@ const Comments = require("../data-access/comments.dao");
 const bookService = {}
 
 bookService.uploadBook = async({body, user}) => {
+  console.log("eeee", file)
     // if(!body.bookName || !body.bookName.value.trim()) throw new Error("Book Name is required")
     // console.log(body)
     if(!body || !body.categoryId || !body.categoryId.value.trim()) throw new Error("CategoryId is required")
