@@ -51,7 +51,7 @@ bookService.uploadBook = async({body, user}) => {
 
     return true
 }
-https://pace.africa/get-started
+
 bookService.getAllBooks = async () => {
     const books = await Book.findAll()
     return books
