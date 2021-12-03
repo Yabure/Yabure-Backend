@@ -15,7 +15,6 @@ const Comments = require("../data-access/comments.dao");
 const bookService = {}
 
 bookService.uploadBook = async({body, user}) => {
-  console.log("eeee", body)
     if(!body.bookName || !body.bookName.value.trim()) throw new Error("Book Name is required")
     console.log(body)
     if(!body || !body.categoryId || !body.categoryId.value.trim()) throw new Error("CategoryId is required")
@@ -24,15 +23,11 @@ bookService.uploadBook = async({body, user}) => {
     if(!interest) throw new Error("Category does not exist");
 
 
-    // console.log("eeee", body.book.fields.book)
-
-
     const bookNumber = await fileSystem.uploadBook(body.book)
 
     const data = {
         author: user,
         bookName: body.bookName.value.toLowerCase(),
-        // bookName: `book ${Math.round(Math.random() * 1000)}`,
         bookNumber,
         category: body.categoryId.value,
         rating: {

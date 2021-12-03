@@ -219,7 +219,7 @@ const Book = {
         if(result) {
             result = result.map(res => {
                 res.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${res.bookNumber}`
-                return  _.pick(res, ['author', 'bookName', 'book', 'rating', 'user',  'createdAt'])
+                return  _.pick(res, ['id', 'author', 'bookName', 'book', 'rating', 'user',  'createdAt'])
             })
         }
 

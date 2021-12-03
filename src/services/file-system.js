@@ -77,6 +77,7 @@ fileSystem.uploadBook = async (file) => {
 
     const url = await fileSystem.uploadFile("books", file)
     const fileName = await fileSystem.getFileName(url)
+    console.log("worked")
     return fileName
   }catch(error) {
     console.log(error)
