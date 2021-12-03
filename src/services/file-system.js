@@ -67,21 +67,25 @@ fileSystem.uploadBook = async (file) => {
     const filetypes = /pdf|epub/;
     // Check ext
     const extname = filetypes.test(path.extname(file.filename).toLowerCase());
+    console.log("worked after file path", extname)
     // Check mime
     const mimetype = filetypes.test(file.mimetype);
+    console.log("worked after file path", mimetype)
   
     if (!(mimetype && extname)) {
-      throw new Error("file type not supported", 400);
+      console.log("worked after file mime", mimetype)
+      throw new Error("file type not supported");
     }
 
 
     const url = await fileSystem.uploadFile("books", file)
+    console.log("worked after url", url)
     const fileName = await fileSystem.getFileName(url)
     console.log("worked")
     return fileName
   }catch(error) {
     console.log(error)
-    throw new Error(error)
+    throw new Error(error, 500)
   }
 };
 
