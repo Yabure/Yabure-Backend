@@ -8,6 +8,7 @@ const User = require("../data-access/user.dao");
 const bookController = {}
 
 bookController.uploadBook = async (req, res) => {
+    console.log(req)
     try {
         await bookService.uploadBook(req)
         Response.SUCCESS({response: res, data: {}, message: "book uploaded successfully"})

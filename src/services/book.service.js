@@ -16,13 +16,12 @@ const bookService = {}
 
 bookService.uploadBook = async({body, user}) => {
     if(!body.bookName || !body.bookName.value.trim()) throw new Error("Book Name is required")
-    console.log(body)
     if(!body || !body.categoryId || !body.categoryId.value.trim()) throw new Error("CategoryId is required")
 
     const interest = await Interest.findById(body.categoryId.value)
     if(!interest) throw new Error("Category does not exist");
 
-
+  console.log("e reach here")
     const bookNumber = await fileSystem.uploadBook(body.book)
 
     const data = {

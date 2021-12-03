@@ -1,17 +1,14 @@
 const S3 = require('aws-sdk/clients/s3')
 const path = require("path");
-const fs = require("fs")
+// const fs = require("fs")
 const authService = require('./auth.service')
 
 const bucketName = process.env.AWS_BUCKET_NAME
-const region = process.env.AWS_BUCKET_REGION
-const secretAccessKey = process.env.AWS_SECRET_KEY
-const accessKeyId = process.env.AWS_ACCESS_KEY
 
 const s3 = new S3({
- region,
- secretAccessKey,
- accessKeyId
+ region:  process.env.AWS_BUCKET_REGION,
+ secretAccessKey: process.env.AWS_SECRET_KEY,
+ accessKeyId: process.env.AWS_ACCESS_KEY,
 })
 
 const fileSystem = {}
@@ -62,8 +59,8 @@ fileSystem.uploadImage = async (image) => {
 };
 
 fileSystem.uploadBook = async (file) => {
+  console.log("eeee", file)
   try {
-    console.log("eeee", file)
     const filetypes = /pdf|epub/;
     // Check ext
     const extname = filetypes.test(path.extname(file.filename).toLowerCase());
