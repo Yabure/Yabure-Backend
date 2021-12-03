@@ -40,9 +40,12 @@ bookService.uploadBook = async({body, user}) => {
         }
     }
 
-
+    console.log("problem")
     await Book.insert(data)
+    console.log("finised saving")
     await Profile.addNotes(user)
+
+    console.log("finised working")
 
     return true
 }
