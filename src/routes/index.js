@@ -6,6 +6,7 @@ const profile = require('./profile.routes')
 const account = require("./account.routes")
 const book = require("./books.routes")
 const search = require("./search.routes")
+const payment = require("./payment.routes")
 
 const routes = (fastify) => {
     fastify.register(auth, {prefix: "/v1/auth"})
@@ -16,6 +17,7 @@ const routes = (fastify) => {
     fastify.register(account, {prefix: "/v1/account"})
     fastify.register(book, {prefix: "/v1/books"})
     fastify.register(search, {prefix: "/v1/search"})
+    fastify.register(payment, {prefix: "/v1/subscribtions"})
 };
 
 module.exports = routes;
