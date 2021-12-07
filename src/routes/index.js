@@ -18,6 +18,7 @@ const routes = (fastify) => {
     fastify.register(book, {prefix: "/v1/books"})
     fastify.register(search, {prefix: "/v1/search"})
     fastify.register(payment, {prefix: "/v1/subscribtions"})
+    fastify.register(payment, {prefix: "/v1/yab-webhook"})
 };
 
 module.exports = routes;

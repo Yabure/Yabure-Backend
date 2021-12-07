@@ -4,7 +4,7 @@ const Response = require("../utils/errorResponse")
 
 const authMiddleWare = (fastify) => {
     const SESSION_NAME = process.env.SESSION_NAME
-    const publicRoute = ["auth", "interests", "rules"]
+    const publicRoute = ["auth", "interests", "rules", "yab-webhook"]
 
     fastify.addHook("preValidation", async (request, response) => {
         if(!request.routerPath) Response.INVALID_REQUEST({response, errors: "Route Does Not Exist"})
