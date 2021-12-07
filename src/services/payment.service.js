@@ -22,8 +22,8 @@ const paymentService = {
 
         const params = JSON.stringify({
           email: email,
-          amount: "1500000",
-          plan_code: "PLN_uhxlido1edyjcbt"
+          amount: "200000",
+          plan_code: "PLN_14t1xyc2cp01vu6"
         })
 
         console.log(process.env.PAYSTACK_KEY)
