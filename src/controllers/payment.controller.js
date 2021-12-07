@@ -1,5 +1,5 @@
 
-const { getAllSubscription, initializeTransaction } = require("../services/payment.service")
+const { getAllSubscription, initializeTransaction, subscriptionWebhook } = require("../services/payment.service")
 const Response = require("../utils/errorResponse")
 const validateErrorFormatter = require("../utils/validateErrorFormatter")
 
@@ -28,7 +28,7 @@ paymentController.initializeTransaction = async (req, res) => {
 
 paymentController.subscriptionWebhook = async (req, res) => {
     try{
-        const data = await this.subscriptionWebhook(req.body)
+        const data = await subscriptionWebhook(req.body)
         return Response.SUCCESS({ response: res, data})
     } catch(err) {
        const errors = await validateErrorFormatter(err) 
