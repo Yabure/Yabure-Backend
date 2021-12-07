@@ -51,7 +51,7 @@ const paymentService = {
        return result
     },
 
-    subscriptionWebhook: async() => {
+    subscriptionWebhook: async(body) => {
         console.log(body)
         return true
     }
