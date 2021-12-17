@@ -10,7 +10,13 @@ authController.register = async (request, response) => {
 	try{
 		const validatedData = await authValidation.registerValidation(request.body)
 		const { authToken, data } = await authService.registerAndLogin(validatedData);
-		response.setCookie(process.env.SESSION_NAME, authToken, { path: '/'})
+		
+		response.setCookie(process.env.SESSION_NAME, 
+			JSON.stringify({
+				token: authToken,
+				subscribed: data.subscribed
+			})
+		, { path: '/'})
 		return Response.SUCCESS({ response, data, message: "Registered Successfully"})
 	} catch(err){
 		const errors = validateErrorFormatter(err)

@@ -13,6 +13,7 @@ authService.register = async (data) => {
         if(user) throw new Error("User already exists");
         data.password = bcryptUtils.hashPassword(data.password)
         data.isVerified = false
+        data.subscribed = true
     
         const newUser = await User.insert(data)
         return newUser
