@@ -1,10 +1,11 @@
 const jwtUtils = require("../utils/token.utils");
-const Response = require("../utils/errorResponse")
+const Response = require("../utils/errorResponse");
+const validateErrorFormatter = require("../utils/validateErrorFormatter");
 
 
 const authMiddleWare = (fastify) => {
     const SESSION_NAME = process.env.SESSION_NAME
-    const publicRoute = ["auth", "interests", "rules", "yab-webhook"]
+    const publicRoute = ["auth", "interests", "rules", "webhook"]
 
     fastify.addHook("preValidation", async (request, response) => {
         if(!request.routerPath) Response.INVALID_REQUEST({response, errors: "Route Does Not Exist"})
@@ -12,15 +13,22 @@ const authMiddleWare = (fastify) => {
         const route = publicRoute.includes(routePath[2]) || publicRoute.includes(routePath[1]) ? routePath[2] : ''
         if(route === '') {
             try {
-                const token = request.cookies[SESSION_NAME]
-                // console.log(token)
-                const user = jwtUtils.decrypt(token)
-                // console.log(user)
-                return request.user = user.id
+                if(request.cookies[SESSION_NAME]) {
+                    const userData = JSON.parse(request.cookies[SESSION_NAME])
+                    const {token, subscribed} = userData
+                    if(!subscribed) throw new Error("You haven't subscribed or your subcription has expired")
+                    console.log(userData)
+                    const user = jwtUtils.decrypt(token)
+                    // console.log(user)
+                    return request.user = user.id
+                }
+                throw new Error("Unauthorized")
             } catch (err) {
-                return Response.INVALID_REQUEST({response, errors: "Unauthorized"})
+                const error = validateErrorFormatter(err)
+                return Response.UNAUTHORIZED({response, errors: 
+                    error ? error : "Unauthorized"
+                })
             }
-
         }
         // console.log("here")
         return;

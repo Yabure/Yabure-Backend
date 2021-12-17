@@ -32,11 +32,11 @@ authService.login = async (data, password) => {
         if(!user.isVerified) {
             const verifyToken = await token.generateVerificationToken(user.email)
             await mail.sendVerificationEmail(user, verifyToken)
-            return {data :_.pick(user, ['firstName', 'isVerified', 'email'])}
+            return {data :_.pick(user, ['firstName', 'isVerified', 'email',])}
         }
     
         const authToken = jwtUtils.generateToken(user.id)
-        return { authToken, data: {} } 
+        return { authToken, data: _.pick(user, ['subscribed', 'isVerified'])} 
 
 } 
  
@@ -47,6 +47,7 @@ authService.registerAndLogin = async (user) => {
         const { authToken, data } = await authService.login(newUser, unHashedPass)
         return { authToken, data } 
     } catch(err){
+        console.log(err)
         throw new Error(err)
     }
 }

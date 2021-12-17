@@ -3,41 +3,13 @@ const prisma = new PrismaClient({errorFormat: 'minimal'})
 const  _ = require("lodash");
 
 
-const Comments = {
-    async findByExplanationId(id) {
-        let result = await prisma.comments.findMany({ 
-            where: { explanationsId: id },
-            include: {
-                user: {
-                    select: {
-                        id: true,
-                        profile: {
-                            select: {
-                                fullName: true,
-                                username: true,
-                                picture: true
-                            }
-                        }
-                    }
-                }
-            }
+const New_Comments = {
+    async findByBookId(id) {
+        let result = await prisma.new_comments.findMany({ 
+            where: { bookId: id },
         });
        
-        if(result) {
-            result = result.map(res => {
-               return  {
-                    ...res,
-                    user: {
-                        id: res.user.id,
-                        profile: {
-                            ...res.user.profile,
-                            picture: res.user.profile.picture !== "null" ? 
-                            `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/profile/${res.user.profile.picture}` : "stuff" 
-                        }
-                    }
-                }
-                
-            })
+        if(result) {    
             return result;
         }
         
@@ -46,7 +18,7 @@ const Comments = {
 
 
     async findById(id) {
-        const result = await prisma.comments.findFirst({
+        const result = await prisma.new_comments.findFirst({
             where: {
                 id
             }
@@ -56,14 +28,12 @@ const Comments = {
     },
 
     async update(id, data){
-
-        const result = await prisma.comments.update({
+        console.log(data)
+        const result = await prisma.new_comments.update({
             where: {
-                id
+                bookId: id
             },
-            data: {
-                replies: data
-            }
+            data
         })
 
         return result
@@ -77,7 +47,8 @@ const Comments = {
     // },
 
     async insert(data) {
-        await prisma.comments.create({
+        console.log(data)
+        await prisma.new_comments.create({
             data
         })
     }
@@ -118,4 +89,4 @@ const Comments = {
       
 }
 
-module.exports = Comments
+module.exports = New_Comments

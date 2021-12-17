@@ -47,8 +47,13 @@ const Reading = {
     },
 
     async insert(data){
-        const result = await prisma.reading.create({data});
-        return result;
+        try {
+            const result = await prisma.reading.create({data});
+            return result;
+        } catch(error) {
+            console.log(error)
+            throw new Error("Oops!! something went wrong")
+        }
     },
 
     // async update(data) {

@@ -50,6 +50,15 @@ const User = {
       })
     },
 
+    async updateByEmail(email, data) {
+      const result = await prisma.user.update({
+        where: {
+          email,
+        },
+        data
+      })
+    },
+
     async insert(data) {
       const result = await prisma.user.create({
         data: {

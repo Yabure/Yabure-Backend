@@ -25,6 +25,9 @@ model user {
   finished_books finished_books[]
   reading reading[]
   explanations explanations[]
+  subscribed Boolean @default(false)
+  plan_code String?
+  plan plans? @relation(fields: [plan_code], references: [plan_code])
   isVerified Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -96,6 +99,7 @@ model book {
   bookName String
   bookNumber String @unique
   category String 
+  new_comments new_comments?
   explanations explanations[]
   rating Json?
   reading reading[]
@@ -164,6 +168,28 @@ model plans {
   name String
   interval String
   amount String @unique
+  user user?
   view_amount String @unique
   plan_code String @unique
+  // createdAt DateTime @default(now())
+  // updatedAt DateTime @updatedAt
+}
+
+model notifications {
+  id String @id @default(uuid())
+  message String
+  recipient String
+  read String
+  url String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model new_comments {
+  id String @id @default(uuid())
+  comments  Json[]
+  bookId String @unique
+  book book @relation(fields: [bookId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -7,6 +7,7 @@ const account = require("./account.routes")
 const book = require("./books.routes")
 const search = require("./search.routes")
 const payment = require("./payment.routes")
+const webhook = require("./webhook.routes")
 
 const routes = (fastify) => {
     fastify.register(auth, {prefix: "/v1/auth"})
@@ -18,7 +19,7 @@ const routes = (fastify) => {
     fastify.register(book, {prefix: "/v1/books"})
     fastify.register(search, {prefix: "/v1/search"})
     fastify.register(payment, {prefix: "/v1/subscribtions"})
-    fastify.register(payment, {prefix: "/v1/yab-webhook"})
+    fastify.register(webhook, {prefix: "/v1/webhook"})
 };
 
 module.exports = routes;

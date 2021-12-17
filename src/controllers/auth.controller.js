@@ -21,11 +21,17 @@ authController.register = async (request, response) => {
 authController.login = async (request, response) => {
 	try {
 		const { authToken, data } = await authService.login(request.body)
+		console.log(data)
 		if(Object.keys(data).length !== 0 && !data.isVerified){
 			return Response.INVALID_REQUEST({ response, errors: data})
 		}
 
-		response.setCookie(process.env.SESSION_NAME, authToken, { path: '/'})
+		response.setCookie(process.env.SESSION_NAME, 
+			JSON.stringify({
+				token: authToken,
+				subscribed: data.subscribed
+			})
+		, { path: '/'})
 		return Response.SUCCESS({ response, data: {}, message: "Logged In Successfully"})
 	} catch(err) {
 		const errors = validateErrorFormatter(err)

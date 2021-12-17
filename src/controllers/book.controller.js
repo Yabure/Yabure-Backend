@@ -84,6 +84,7 @@ bookController.addReadingBooks = async (req, res) => {
         return Response.SUCCESS({ response: res, data: {}, message: "Request Successful" })
     } catch(err) {
        const errors = await validateErrorFormatter(err) 
+       console.log(err)
        return Response.INVALID_REQUEST({ response: res, errors})
     }
 }
@@ -122,7 +123,7 @@ bookController.addExplanation = async (req, res) => {
 
 bookController.addComments = async (req, res) => {
     try{
-        await bookService.addComments(req)
+        await bookService.addNewComments(req)
         return Response.SUCCESS({ response: res, data: {}, message: "Request Successful" })
     } catch(err) {
        const errors = await validateErrorFormatter(err) 
@@ -142,7 +143,7 @@ bookController.getExplanations = async (req, res) => {
 
 bookController.getExplanationsComments = async (req, res) => {
     try{
-        const result = await bookService.getExplanationsComments(req)
+        const result = await bookService.getNewComments(req)
         return Response.SUCCESS({ response: res, data: result, message: "Request Successful" })
     } catch(err) {
        const errors = await validateErrorFormatter(err) 
@@ -152,13 +153,23 @@ bookController.getExplanationsComments = async (req, res) => {
 
 bookController.replyComment = async (req, res) => {
     try {
-        const result = await bookService.replyComment(req)
+        const result = await bookService.replyNewComment(req)
         return Response.SUCCESS({ response: res, data: result, message: "Request Successful" })
     } catch(err) {
         const errors = await validateErrorFormatter(err) 
         return Response.INVALID_REQUEST({ response: res, errors})
     }
 }
+
+// bookController.replyNewComment = async (req, res) => {
+//     try {
+//         const result = await bookService.replyNewComment(req)
+//         return Response.SUCCESS({ response: res, data: result, message: "Request Successful" })
+//     } catch(err) {
+//         const errors = await validateErrorFormatter(err) 
+//         return Response.INVALID_REQUEST({ response: res, errors})
+//     }
+// }
 
 
 

@@ -34,6 +34,15 @@ class HttpStatusCode {
         configurable: false,
       };
     }
+  
+    static UNAUTHORIZED() {
+      return {
+        value: 401,
+        writable: false,
+        enumerable: true,
+        configurable: false,
+      };
+    }
 }
 
 module.exports = HttpStatusCode;

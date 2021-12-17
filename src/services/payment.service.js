@@ -1,5 +1,6 @@
 const { default: axios } = require("axios")
-const Plan = require("../data-access/plan.dao")
+const Plan = require("../data-access/plan.dao");
+    
 
 const paymentService = {
     initializeTransaction: async (body) => {
@@ -23,7 +24,7 @@ const paymentService = {
         const params = JSON.stringify({
           email: email,
           amount: "200000",
-          plan_code: "PLN_14t1xyc2cp01vu6"
+          plan: "PLN_14t1xyc2cp01vu6"
         })
 
         console.log(process.env.PAYSTACK_KEY)
@@ -50,11 +51,6 @@ const paymentService = {
        const result = await Plan.findAll()
        return result
     },
-
-    subscriptionWebhook: async(body) => {
-        console.log(body)
-        return true
-    }
 }
 
 module.exports = paymentService

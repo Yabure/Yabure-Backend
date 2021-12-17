@@ -30,6 +30,12 @@ class ResponseFormatter {
     return response.status(HttpStatusCode.INVALID_REQUEST().value).send(responseDetails);
   }
 
+  static async UNAUTHORIZED(params) {
+    const { message = 'Request failed', errors = true, response } = params;
+    const responseDetails = formatResponse({ errors, message, success: false });
+    return response.status(HttpStatusCode.UNAUTHORIZED().value).send(responseDetails);
+  }
+
   static async UNPROCCESSABLE_ENTITY(params) {
     const { message = 'Request failed', errors = true, response } = params;
     const responseDetails = formatResponse({ errors: true, message, success: false });

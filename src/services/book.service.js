@@ -9,8 +9,9 @@ const User = require("../data-access/user.dao");
 const Reading = require("../data-access/reading.dao");
 const Finished = require("../data-access/finished.dao");
 const Explanation = require("../data-access/explanation.dao");
-const { bool } = require("joi");
 const Comments = require("../data-access/comments.dao");
+const New_Comments = require("../data-access/new_coments.das");
+const { v4: uuidv4 } = require('uuid');
 
 const bookService = {}
 
@@ -21,7 +22,7 @@ bookService.uploadBook = async({body, user}) => {
     const interest = await Interest.findById(body.categoryId.value)
     if(!interest) throw new Error("Category does not exist");
 
-  console.log("e reach here")
+  
     const bookNumber = await fileSystem.uploadBook(body.book)
 
     const data = {
@@ -39,9 +40,8 @@ bookService.uploadBook = async({body, user}) => {
         }
     }
 
-    console.log("problem")
+
     await Book.insert(data)
-    console.log("finised saving")
     await Profile.addNotes(user)
 
     console.log("finised working")
@@ -140,6 +140,8 @@ bookService.addReadingBooks = async ({user, body}) => {
 
   const result = await Reading.findOne(data)
   if(result) throw new Error("Book already added to your reading list")
+
+  console.log(result)
   
 
   await Reading.insert(data)
@@ -198,6 +200,7 @@ bookService.addExplanation = async ({user, body}) => {
 bookService.addComments = async ({user, body}) => {
   if(typeof(body.comment) !== "string") throw new Error("Comment must be a string")
 
+
   const explanation = await Explanation.findOne(body.explanationsId)
   if(!explanation) throw new Error("Explanation does not exist")
 
@@ -213,11 +216,77 @@ bookService.addComments = async ({user, body}) => {
   return
 }
 
+bookService.addNewComments = async ({user, body}) => {
+  if(typeof(body.comment) !== "string") throw new Error("Comment must be a string")
+  const {userId, username, fullName, picture} = await Profile.findById(user)
+
+  const { bookId, comment } = body
+
+
+  const comments = await New_Comments.findByBookId(bookId)
+
+  if(comments.length < 1) {
+    try {
+      await New_Comments.insert({
+        userId: user,
+        bookId: bookId,
+        comments: [ {
+          "id": uuidv4(),
+          "userId": userId,
+          "fullName": fullName,
+          "username": username,
+          "comment": comment.trim(),
+          "replies": [] 
+        } ],
+      })
+
+
+      return
+  
+    } catch (error) {
+      console.log(error)
+      throw new Error("Oops! Somthing went wrong!")
+    }
+  }
+
+
+  try {
+    comments[0].comments.push({
+      "id": uuidv4(),
+      "fullName": fullName,
+      "username": username,
+      "userId": userId,
+      "comment": comment.trim(),
+      "replies": [] 
+    })
+    await New_Comments.update(bookId, {
+      comments: comments[0].comments
+    })
+
+  } catch (error) {
+    console.log(error)
+    throw new Error("Oops! Somthing went wrong!")
+  }
+
+  return true
+}
+
+
+bookService.getNewComments = async ({params}) => {
+  const result = await New_Comments.findByBookId(params.bookId)
+
+  return result
+}
+
+
 bookService.getExplanations = async ({params}) => {
   const result = await Explanation.findByBookId(params.bookId)
 
   return result
 }
+
+
+
 
 bookService.getExplanationsComments = async ({params}) => {
   const result = await Comments.findByExplanationId(params.explanationsId)
@@ -225,30 +294,65 @@ bookService.getExplanationsComments = async ({params}) => {
   return result
 }
 
-bookService.replyComment = async ({body, user}) => {
+
+
+// bookService.replyComment = async ({body, user}) => {
+//   if(!body) throw new Error("Invalid body data")
+//   if(!body.commentId) throw new Error("No comment is specfied")
+//   if(!body.reply || typeof(body.reply) !== "string") throw new Error("Reply must be a string and should not be empty")
+
+
+//   const comment = await Comments.findById(body.commentId)
+//   if(!comment) throw new Error("Comments does not exist")
+  
+//   const {userId, username, fullName, picture} = await Profile.findById(user)
+
+
+//   comment.replies.push({
+//     "userId": userId,
+//     "fullName": fullName,
+//     "username": username,
+//     "picture": picture,
+//     "reply": body.reply
+//   })
+
+//   await Comments.update(body.commentId, comment.replies)
+
+//   return []
+// }
+
+bookService.replyNewComment = async ({body, user}) => {
   if(!body) throw new Error("Invalid body data")
   if(!body.commentId) throw new Error("No comment is specfied")
   if(!body.reply || typeof(body.reply) !== "string") throw new Error("Reply must be a string and should not be empty")
 
 
-  const comment = await Comments.findById(body.commentId)
+  const comment = await New_Comments.findByBookId(body.bookId)
   if(!comment) throw new Error("Comments does not exist")
+
+  // console.log(comment)
   
-  const {userId, username, fullName, picture} = await Profile.findById(user)
+  const {userId, username, fullName } = await Profile.findById(user);
 
+  const result = comment[0].comments.find(comment => {
+     if(comment.id === body.commentId) {
+       comment.replies.push({
+        "userId": userId,
+        "fullName": fullName,
+        "username": username,
+        "reply": body.reply
+      })
+     }
 
-  comment.replies.push({
-    "userId": userId,
-    "fullName": fullName,
-    "username": username,
-    "picture": picture,
-    "reply": body.reply
   })
 
-  await Comments.update(body.commentId, comment.replies)
 
-  return []
+  await New_Comments.update(body.bookId, { comments: comment })
+
+  return true
 }
+
+
 
 
 module.exports = bookService
