@@ -228,7 +228,6 @@ bookService.addNewComments = async ({user, body}) => {
   if(comments.length < 1) {
     try {
       await New_Comments.insert({
-        userId: user,
         bookId: bookId,
         comments: [ {
           "id": uuidv4(),
