@@ -21,6 +21,7 @@ authService.register = async (data) => {
         
     
 }
+
 authService.login = async (data, password) => {
    
         const user = await User.findByEmail(data.email);
@@ -40,7 +41,8 @@ authService.login = async (data, password) => {
         return { authToken, data: _.pick(user, ['subscribed', 'isVerified'])} 
 
 } 
- 
+
+
 authService.registerAndLogin = async (user) => {
     try {
         const unHashedPass = user.password  
