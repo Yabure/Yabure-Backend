@@ -28,6 +28,8 @@ model user {
   subscribed Boolean @default(false)
   plan_code String?
   plan plans? @relation(fields: [plan_code], references: [plan_code])
+  expire String?
+  reset String? @unique
   isVerified Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -165,10 +167,10 @@ model comments {
 
 model plans {
   id String @id @default(uuid())
-  name String
+  name String @unique
   interval String
   amount String @unique
-  user user?
+  user user[]
   view_amount String @unique
   plan_code String @unique
   // createdAt DateTime @default(now())

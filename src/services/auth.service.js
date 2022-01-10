@@ -4,6 +4,7 @@ const jwtUtils = require("../utils/token.utils")
 const User = require("../data-access/user.dao")
 const mail = require("./mail.service")
 const token = require("./token.service")
+const { v4: uuidv4 } = require('uuid');
 
 const authService = {}
 
@@ -81,6 +82,34 @@ authService.resendVerification = async ({email}) => {
     const verifyToken = await token.generateVerificationToken(user.email)
     await mail.sendVerificationEmail(user, verifyToken)
     return true
+}
+
+authService.forgotPassword = async ({email}) => {
+    try {
+        const id = uuidv4()
+        const user = await User.updateByEmail(email, {
+            reset: id
+        })
+
+        await mail.sendForgotPasswordEmail(email, id)
+        return user
+    } catch(error){
+        console.log(error)
+    }
+}
+
+authService.resetPassword = async ({key, password}) => {
+    try {
+        const user = await User.updateByResetId(key, {
+            password: bcryptUtils.hashPassword(password),
+            reset: null
+        })
+
+        // await mail.sendForgotPasswordEmail(email, id)
+        return user
+    } catch(error){
+        console.log(error)
+    }
 }
 
 module.exports = authService

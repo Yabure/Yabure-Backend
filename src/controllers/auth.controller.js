@@ -14,9 +14,14 @@ authController.register = async (request, response) => {
 		response.setCookie(process.env.SESSION_NAME, 
 			JSON.stringify({
 				token: authToken,
-				subscribed: data.subscribed
+				subscribed: data.subscribed,
+				expire: data.expire
 			})
-		, { path: '/'})
+		, { 
+			path: '/',
+			maxAge: 24 * 60
+		}
+		)
 		return Response.SUCCESS({ response, data, message: "Registered Successfully"})
 	} catch(err){
 		const errors = validateErrorFormatter(err)
@@ -35,9 +40,14 @@ authController.login = async (request, response) => {
 		response.setCookie(process.env.SESSION_NAME, 
 			JSON.stringify({
 				token: authToken,
-				subscribed: data.subscribed
+				subscribed: data.subscribed,
+				expire: data.expire
 			})
-		, { path: '/'})
+		, { 
+			path: '/',
+			maxAge: 60
+		}
+		)
 		return Response.SUCCESS({ response, data: {}, message: "Logged In Successfully"})
 	} catch(err) {
 		const errors = validateErrorFormatter(err)
@@ -68,7 +78,25 @@ authController.resendVerification = async (request, response) => {
 }
 
 authController.forgotPassword = async (request, response) => {
-	  
+	try {
+		await authService.forgotPassword(request.query)
+
+		return Response.SUCCESS({ response, data: {}, message: "Sent Successfully"})
+	} catch(err) {
+		const errors = validateErrorFormatter(err)
+		return Response.INVALID_REQUEST({ response, errors })
+	}
+}
+
+authController.resetPassword = async (request, response) => {
+	try {
+		await authService.resetPassword(request.body)
+
+		return Response.SUCCESS({ response, data: {}, message: "Sent Successfully"})
+	} catch(err) {
+		const errors = validateErrorFormatter(err)
+		return Response.INVALID_REQUEST({ response, errors })
+	}
 }
 
 module.exports = authController

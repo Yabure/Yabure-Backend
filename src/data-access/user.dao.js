@@ -59,6 +59,15 @@ const User = {
       })
     },
 
+    async updateByResetId(key, data) {
+      const result = await prisma.user.update({
+        where: {
+          reset: key,
+        },
+        data
+      })
+    },
+
     async insert(data) {
       const result = await prisma.user.create({
         data: {

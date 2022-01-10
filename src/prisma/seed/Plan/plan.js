@@ -4,7 +4,7 @@ const seedPlan = async (prisma) => {
   for (let plan of plans){
     await prisma.plans.upsert({
         where: {
-            plan_code: plan.plan_code,
+          name: plan.name,
           },
           update: {
             name: plan.name,

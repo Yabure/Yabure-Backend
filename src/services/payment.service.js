@@ -12,22 +12,14 @@ const paymentService = {
         const result = await Plan.findByPlanId(planId)
         if(!result) throw new Error("Plan does not exist")
 
-        console.log(result)
-
-
-        // const params = JSON.stringify({
-        //   email: email,
-        //   amount: result.amount,
-        //   plan_code: result.plan_code
-        // })
-
         const params = JSON.stringify({
           email: email,
-          amount: "200000",
-          plan: "PLN_14t1xyc2cp01vu6"
-        })
+          amount: result.amount,
+          plan: result.plan_code
+        });
 
-        console.log(process.env.PAYSTACK_KEY)
+        console.log(params)
+
 
         try {
             const response = await axios.post("https://api.paystack.co/transaction/initialize", params,{
@@ -36,8 +28,6 @@ const paymentService = {
                     'Content-Type': 'application/json'
                 }
             })
-
-            console.log(response.data)
     
             return {checkout: response.data.data.authorization_url}
         } catch (error) {

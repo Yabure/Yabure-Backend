@@ -4,7 +4,7 @@ const seedInterest = async (prisma) => {
   for (let interest of interests){
     await prisma.interest.upsert({
         where: {
-            field: interest.field,
+            field: interest.field.toLocaleLowerCase(),
           },
           update: {
             interests: interest.interest

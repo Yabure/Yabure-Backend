@@ -1,5 +1,8 @@
 const nodemailer = require('nodemailer');
 const sgTransport = require('nodemailer-sendgrid-transport');
+const hbs = require('nodemailer-express-handlebars');
+const path = require("path");
+
 
 const options = {
     auth: {
@@ -8,6 +11,14 @@ const options = {
 }
 
 const mailer = nodemailer.createTransport(sgTransport(options));
+mailer.use('compile', hbs({
+    viewEngine: {
+        partialsDir: path.join(__dirname, "../views/"),
+        layoutsDir: path.join(__dirname, "../views/"),
+        defaultLayout: ""
+      },
+      viewPath: path.join(__dirname, "../views/")
+}))
 
 const mail = {}
 
@@ -25,5 +36,24 @@ mail.sendVerificationEmail = async (user, token) => {
         throw new Error(err)
     })
 }
+
+
+mail.sendForgotPasswordEmail = async (user, key) => {
+    const email = {
+        to: [`${user}`],
+        from: `${process.env.SENDGRID_EMAIL_SENDER}`,
+        subject: 'Password Reset',
+        template: "forgot-password",
+        context: {
+            key
+        },
+    };
+    await mailer.sendMail(email).then(() => {
+        return true
+    }).catch((err) => {
+        throw new Error(err)
+    })
+}
+
 
 module.exports = mail

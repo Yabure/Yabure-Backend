@@ -4,9 +4,9 @@ const User = require("../../data-access/user.dao");
 const subscriptionWebhook = {
     subscriptionWebhook: async(body) => {
         try {
-            if(body.event === 'charge.success') {
-                const { email } = body.data.customer
-                const { name, plan_code } = body.data.plan
+            const { email } = body.data.customer
+            if(body.event === 'charge.success' || body.event === 'subscription.create') {
+                const { plan_code } = body.data.plan
                 try {
                     await User.updateByEmail(email, {
                         subscribed: true,
