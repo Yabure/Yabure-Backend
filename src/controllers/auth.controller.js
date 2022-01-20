@@ -19,7 +19,7 @@ authController.register = async (request, response) => {
 			})
 		, { 
 			path: '/',
-			maxAge: 24 * 60
+			// Expires: "Thu, 20 Jan 2022 08:29:00 GMT"
 		}
 		)
 		return Response.SUCCESS({ response, data, message: "Registered Successfully"})
@@ -34,7 +34,7 @@ authController.login = async (request, response) => {
 		const { authToken, data } = await authService.login(request.body)
 		console.log(data)
 		if(Object.keys(data).length !== 0 && !data.isVerified){
-			return Response.INVALID_REQUEST({ response, errors: data})
+			return Response.INVALID_REQUEST({ response, errors: data, subscribed: false})
 		}
 
 		response.setCookie(process.env.SESSION_NAME, 
@@ -43,15 +43,16 @@ authController.login = async (request, response) => {
 				subscribed: data.subscribed,
 				expire: data.expire
 			})
-		, { 
+		, 
+		{ 
 			path: '/',
-			maxAge: 60
+			// Expires: "Thu, 20 Jan 2022 07:44:00 GMT"
 		}
 		)
-		return Response.SUCCESS({ response, data: {}, message: "Logged In Successfully"})
+		return Response.SUCCESS({ response, data: {}, message: "Logged In Successfully", subscribed: data.subscribed})
 	} catch(err) {
 		const errors = validateErrorFormatter(err)
-		return Response.INVALID_REQUEST({ response, errors })
+		return Response.INVALID_REQUEST({ response, errors, subscribed: false })
 	}
 }
 
@@ -62,7 +63,7 @@ authController.verifyUser = async (request, response) => {
 		return Response.SUCCESS({ response, data: {}, message: "Verified Successfully"})
 	}  catch(err) {
 		const errors = validateErrorFormatter(err)
-		return Response.INVALID_REQUEST({ response, errors })
+		return Response.INVALID_REQUEST({ response, errors, subscribed: false })
 	}
 }
 
@@ -73,7 +74,7 @@ authController.resendVerification = async (request, response) => {
 		return Response.SUCCESS({ response, data: {}, message: "Sent Successfully"})
 	} catch(err) {
 		const errors = validateErrorFormatter(err)
-		return Response.INVALID_REQUEST({ response, errors })
+		return Response.INVALID_REQUEST({ response, errors, subscribed: false })
 	}
 }
 

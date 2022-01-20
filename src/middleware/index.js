@@ -11,7 +11,12 @@ const corsOptions = {
 const Middlewares = (fastify) => {
     fastify.register(require("fastify-helmet"), {contentSecurityPolicy: false});
     fastify.register(require("fastify-cors", corsOptions));
-    fastify.register(require("fastify-cookie"), { secret: process.env.AUTH_NAME });
+    fastify.register(require("fastify-cookie"), 
+      { 
+        secret: process.env.AUTH_NAME,
+      },
+      
+    );
     fastify.register(require('fastify-multipart'), { 
       attachFieldsToBody: true,
       limit: { fileSize: 5 * 1024 * 1024 }

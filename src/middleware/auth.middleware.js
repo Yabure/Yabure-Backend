@@ -27,7 +27,8 @@ const authMiddleWare = (fastify) => {
             } catch (err) {
                 const error = validateErrorFormatter(err)
                 return Response.UNAUTHORIZED({response, errors: 
-                    error ? error : "Unauthorized"
+                    error ? error : "Unauthorized",
+                    subscribed: false
                 })
             }
         }
