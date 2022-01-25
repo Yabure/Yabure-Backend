@@ -23,7 +23,7 @@ const Book = {
         });
         if(result) {
             result = result.map(res => {
-                res.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${res.bookNumber}`
+                res.book = `${process.env.AWS_S3_BUCKET_URL}/books/${res.bookNumber}`
                 return  _.pick(res, ['id', 'author', 'bookName', 'book', 'rating', 'user',  'createdAt'])
             })
         }
@@ -56,7 +56,7 @@ const Book = {
             });
             if(result) {
                 result = result.map(res => {
-                    res.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${res.bookNumber}`
+                    res.book = `${process.env.AWS_S3_BUCKET_URL}/books/${res.bookNumber}`
                     return  _.pick(res, ['id', 'author', 'bookName', 'book', 'rating', 'user',  'createdAt'])
                 })
             }
@@ -85,7 +85,7 @@ const Book = {
 
         if(result) {
             result = result.map(res => {
-                res.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${res.bookNumber}`
+                res.book = `${process.env.AWS_S3_BUCKET_URL}/books/${res.bookNumber}`
                 return  _.pick(res, ['id', 'author', 'bookName', 'book', 'rating', 'user',  'createdAt'])
             })
         }
@@ -117,7 +117,7 @@ const Book = {
  
         if(result) {
             result = result.map(res => {
-                res.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${res.bookNumber}`
+                res.book = `${process.env.AWS_S3_BUCKET_URL}/books/${res.bookNumber}`
                 return  _.pick(res, ['id', 'author', 'bookName', 'book', 'rating', 'user',  'createdAt'])
             })
         }
@@ -168,7 +168,7 @@ const Book = {
             }
         })
         if(data) {
-            data.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${data.bookNumber}`
+            data.book = `${process.env.AWS_S3_BUCKET_URL}/books/${data.bookNumber}`
             return  _.pick(data, ['id', 'author', 'bookName', 'book', 'rating', 'user', 'createdAt'])
         }
         return data
@@ -188,7 +188,7 @@ const Book = {
             }
         })
         if(data) {
-            data.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${data.bookNumber}`
+            data.book = `${process.env.AWS_S3_BUCKET_URL}/books/${data.bookNumber}`
             return  _.pick(data, ['id', 'author', 'bookName', 'book', 'rating', 'explanations',  'createdAt'])
         }
         return data
@@ -218,7 +218,7 @@ const Book = {
         });
         if(result) {
             result = result.map(res => {
-                res.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${res.bookNumber}`
+                res.book = `${process.env.AWS_S3_BUCKET_URL}/books/${res.bookNumber}`
                 return  _.pick(res, ['id', 'author', 'bookName', 'book', 'rating', 'user',  'createdAt'])
             })
         }

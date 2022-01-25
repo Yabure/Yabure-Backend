@@ -32,7 +32,7 @@ const Comments = {
                         profile: {
                             ...res.user.profile,
                             picture: res.user.profile.picture !== "null" ? 
-                            `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/profile/${res.user.profile.picture}` : "stuff" 
+                            `${process.env.AWS_S3_BUCKET_URL}/profile/${res.user.profile.picture}` : "stuff" 
                         }
                     }
                 }

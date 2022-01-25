@@ -25,11 +25,11 @@ const Profile = {
           result.user.books = result.user.books.map((res) => {
             return {
               ...res,
-              book: `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${res.bookNumber}`
+              book: `${process.env.AWS_S3_BUCKET_URL}/books/${res.bookNumber}`
             }
           })
           
-          result.picture = result.picture !== "null" ? `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/profile/${result.picture}` : null
+          result.picture = result.picture !== "null" ? `${process.env.AWS_S3_BUCKET_URL}/profile/${result.picture}` : null
         }
         return result;
       },
@@ -102,7 +102,7 @@ const Profile = {
         result = result.map(res => {
           return {
             ...res,
-            picture: res.picture !== "null" ? `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/profile/${res.picture}` : null
+            picture: res.picture !== "null" ? `${process.env.AWS_S3_BUCKET_URL}/profile/${res.picture}` : null
           }
         })
       }

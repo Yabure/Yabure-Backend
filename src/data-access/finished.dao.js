@@ -28,7 +28,7 @@ const Finished = {
 
         if(result.length > 0) {
             result = result.map(res => {
-                res.book.book = `https://yabure-s3-bucket.s3.us-east-2.amazonaws.com/books/${res.book.bookNumber}`
+                res.book.book = `${process.env.AWS_S3_BUCKET_URL}/books/${res.book.bookNumber}`
                 return  _.pick(res.book, ['id', 'author', 'bookName', 'book', 'rating', 'user', 'createdAt'])
             })
         }
