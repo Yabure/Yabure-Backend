@@ -26,7 +26,9 @@ model user {
   reading reading[]
   explanations explanations[]
   subscribed Boolean @default(false)
+  canUpload Boolean @default(false)
   plan_code String?
+  permission String
   plan plans? @relation(fields: [plan_code], references: [plan_code])
   expire String?
   reset String? @unique

@@ -3,7 +3,18 @@ const prisma = new PrismaClient({errorFormat: 'minimal'})
 
 const User = {
     async findByEmail(email) {
-        const result = await prisma.user.findUnique({ where: { email }});
+        const result = await prisma.user.findUnique({ 
+          where: { 
+            email 
+          },
+          include: {
+            profile:{
+              select: {
+                fullName: true
+              }
+            }
+          }
+        });
         return result;
     },
 
@@ -71,11 +82,14 @@ const User = {
     async insert(data) {
       const result = await prisma.user.create({
         data: {
-          email: data.email,
+          email: data.email.toLowerCase(),
           password: data.password,
+          isVerified: data.isVerified,
+          permission: data.permission,
+          subscribed: data.subscribed,
           profile: {
             create: {
-              fullName: `${data.firstName} ${data.lastName}`,
+              fullName: `${data.firstName} ${data.lastName}`.toLocaleLowerCase(),
               username: `${data.firstName.toLowerCase()}y${Math.floor(Math.random() * 1001) + 1}`,
               phoneNumber: `${data.phoneNumber}`  
             }

@@ -11,21 +11,19 @@ authController.register = async (request, response) => {
 		const validatedData = await authValidation.registerValidation(request.body)
 		const { authToken, data } = await authService.registerAndLogin(validatedData);
 		
-		response.setCookie(process.env.SESSION_NAME, 
-			JSON.stringify({
-				token: authToken,
-				subscribed: data.subscribed,
-				expire: data.expire
-			})
-		, { 
+		response.cookie(process.env.SESSION_NAME, 
+			authToken,
+		{ 
 			path: '/',
+			httpOnly: true,
+			expires: "Thu, 3 Feb 2022 10:15:00 GMT"
 			// Expires: "Thu, 20 Jan 2022 08:29:00 GMT"
 		}
 		)
 		return Response.SUCCESS({ response, data, message: "Registered Successfully"})
 	} catch(err){
 		const errors = validateErrorFormatter(err)
-		return Response.INVALID_REQUEST({ response, errors, message: errors })
+		return Response.INVALID_REQUEST({ response, errors, subscribed: false })
 	}
 }
 
@@ -37,19 +35,22 @@ authController.login = async (request, response) => {
 			return Response.INVALID_REQUEST({ response, errors: data, subscribed: false})
 		}
 
-		response.setCookie(process.env.SESSION_NAME, 
-			JSON.stringify({
-				token: authToken,
-				subscribed: data.subscribed,
-				expire: data.expire
-			})
-		, 
-		{ 
-			path: '/',
-			// Expires: "Thu, 20 Jan 2022 07:44:00 GMT"
-		}
+		response.cookie(
+			process.env.SESSION_NAME, 
+			authToken,
+			{ 
+				path: '/',
+				name: 'amiunwuienuf394j024j92n4in2i',
+				resave: true,
+				saveUninitialized: true,
+				httpOnly: true,
+				secure: false,
+				sameSite: 'None',
+				expires: new Date("Thu, 3 Feb 2022 10:21:00 GMT")
+				// Expires: "Thu, 20 Jan 2022 08:29:00 GMT"
+			}
 		)
-		return Response.SUCCESS({ response, data: {}, message: "Logged In Successfully", subscribed: data.subscribed})
+		return Response.SUCCESS({ response, data: {}, messsage: "Logged In Successfully", subscribed: data.subscribed})
 	} catch(err) {
 		const errors = validateErrorFormatter(err)
 		return Response.INVALID_REQUEST({ response, errors, subscribed: false })
@@ -97,6 +98,29 @@ authController.resetPassword = async (request, response) => {
 	} catch(err) {
 		const errors = validateErrorFormatter(err)
 		return Response.INVALID_REQUEST({ response, errors })
+	}
+}
+
+authController.logOut = async (request, response) => {
+	try {
+		response.cookie(
+			process.env.SESSION_NAME, 
+			{},
+			{ 
+				path: '/',
+				name: 'amiunwuienuf394j024j92n4in2i',
+				resave: true,
+				saveUninitialized: true,
+				httpOnly: true,
+				secure: false,
+				sameSite: 'None',
+				expires: new Date()
+				// Expires: "Thu, 20 Jan 2022 08:29:00 GMT"
+			}
+		)
+		return Response.SUCCESS({ response, data: {}, message: "Logged Out Successfully"})
+	} catch(error) {
+		throw new Error(error)
 	}
 }
 

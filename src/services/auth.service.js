@@ -5,19 +5,29 @@ const User = require("../data-access/user.dao")
 const mail = require("./mail.service")
 const token = require("./token.service")
 const { v4: uuidv4 } = require('uuid');
+const validateErrorFormatter = require("../utils/validateErrorFormatter")
 
 const authService = {}
 
 authService.register = async (data) => {
-
+    try {
         const user = await User.findByEmail(data.email)
-        if(user) throw new Error("User already exists");
+        if(user) throw new Error("user already exists");
         data.password = bcryptUtils.hashPassword(data.password)
         data.isVerified = false
         data.subscribed = true
+        data.permission = 'uploader'
+    
+        console.log(data)
     
         const newUser = await User.insert(data)
         return newUser
+    } catch(error) {
+        const err = validateErrorFormatter(error)
+        if(err !== "user already exists") throw new Error("Sorry, we couldn't create your account at this time, try again later")
+        throw new Error(err)        
+    }
+
 
         
     
@@ -38,8 +48,8 @@ authService.login = async (data, password) => {
             return {data :_.pick(user, ['firstName', 'isVerified', 'email',])}
         }
     
-        const authToken = jwtUtils.generateToken(user.id)
-        return { authToken, data: _.pick(user, ['subscribed', 'isVerified'])} 
+        const authToken = jwtUtils.generateToken({id: user.id, subscribed: user.subscribed, expire: user.expire})
+        return { authToken, data: _.pick(user, ['subscribed', 'isVerified', 'permission'])} 
 
 } 
 

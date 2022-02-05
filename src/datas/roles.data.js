@@ -1,0 +1,5 @@
+const roles = {
+    uploader: [
+        "canUploadBooks"
+    ]
+}

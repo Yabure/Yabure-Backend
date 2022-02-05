@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken")
 const jwtUtils = {}
 
 jwtUtils.generateToken = (data) => {
-    return jwt.sign({id: data}, process.env.SECRET ?? "")
+    return jwt.sign(data, process.env.SECRET ?? "")
 }
 
 jwtUtils.decrypt = (token) => {

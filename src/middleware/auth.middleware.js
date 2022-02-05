@@ -15,11 +15,9 @@ const authMiddleWare = (fastify) => {
         if(route === '') {
             try {
                 if(request.cookies[SESSION_NAME]) {
-                    const userData = JSON.parse(request.cookies[SESSION_NAME])
-                    const {token, subscribed} = userData
-                    if(!subscribed) throw new Error("You haven't subscribed or your subcription has expired")
-                    console.log(userData)
-                    const user = jwtUtils.decrypt(token)
+                    const user = jwtUtils.decrypt(request.cookies[SESSION_NAME])
+                    if(!user.subscribed) throw new Error("You haven't subscribed or your subcription has expired")
+                    console.log(user, "wwww")
                     // console.log(user)
                     return request.user = user.id
                 }
