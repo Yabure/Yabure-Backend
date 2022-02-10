@@ -1,13 +1,13 @@
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 
-const jwtUtils = {}
+const jwtUtils = {};
 
 jwtUtils.generateToken = (data) => {
-    return jwt.sign(data, process.env.SECRET ?? "")
-}
+  return jwt.sign(data, process.env.SECRET ?? "");
+};
 
 jwtUtils.decrypt = (token) => {
-    return jwt.verify(token, process.env.SECRET)
-}
+  return jwt.verify(token, process.env.SECRET);
+};
 
-module.exports = jwtUtils
+module.exports = jwtUtils;
