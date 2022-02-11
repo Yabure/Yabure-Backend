@@ -1,7 +1,7 @@
 const authMiddleWare = require("./auth.middleware");
 
 const corsOptions = {
-  origin: true,
+  origin: "*",
   optionsSuccessStatus: 200,
   allowedHeaders: ["Content-Type", "Authorization", process.env.AUTH_NAME],
   credentials: true,
