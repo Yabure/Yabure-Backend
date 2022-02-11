@@ -85,7 +85,7 @@ const User = {
         email: data.email.toLowerCase(),
         password: data.password,
         isVerified: data.isVerified,
-        permission: data.permission,
+        role: data.role,
         subscribed: data.subscribed,
         profile: {
           create: {

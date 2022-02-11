@@ -16,9 +16,31 @@ authService.register = async (data) => {
     data.password = bcryptUtils.hashPassword(data.password);
     data.isVerified = false;
     data.subscribed = true;
-    data.permission = "uploader";
+    data.role = "USER";
 
     console.log(data);
+
+    const newUser = await User.insert(data);
+    return newUser;
+  } catch (error) {
+    console.log(error);
+    const err = validateErrorFormatter(error);
+    if (err !== "user already exists")
+      throw new Error(
+        "Sorry, we couldn't create your account at this time, try again later"
+      );
+    throw new Error(err);
+  }
+};
+
+authService.adminRegisterUser = async (data) => {
+  try {
+    const user = await User.findByEmail(data.email);
+    if (user) throw new Error("user already exists");
+    data.password = bcryptUtils.hashPassword(data.password);
+    data.isVerified = true;
+    data.subscribed = true;
+    data.role = "MODERATOR";
 
     const newUser = await User.insert(data);
     return newUser;
@@ -55,16 +77,11 @@ authService.login = async (data, password) => {
       id: user.id,
       subscribed: user.subscribed,
       expire: user.expire,
-      permission: user.permission,
+      role: user.role,
     });
     return {
       authToken,
-      data: _.pick(user, [
-        "subscribed",
-        "isVerified",
-        "permission",
-        "can_upload",
-      ]),
+      data: _.pick(user, ["subscribed", "isVerified", "role", "can_upload"]),
     };
   } catch (error) {
     console.log(error);

@@ -1,7 +1,7 @@
 const roles = {
-  uploader: [],
-  admin: ["canUploadBooks", "canCreateUser", "canDeleteUser", "canDeleteBooks"],
-  moderator: ["canUploadBooks", "canDeleteBooks"],
+  USER: [],
+  ADMIN: ["canUploadBooks", "canCreateUser", "canDeleteUser", "canDeleteBooks"],
+  MODERATOR: ["canUploadBooks", "canDeleteBooks"],
 };
 
 module.exports = roles;

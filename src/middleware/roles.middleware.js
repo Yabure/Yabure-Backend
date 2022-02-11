@@ -3,7 +3,7 @@ const Response = require("../utils/errorResponse");
 const validateErrorFormatter = require("../utils/validateErrorFormatter");
 
 exports.canUploadMiddleware = (request, reply, next) => {
-  if (roles[request.user.permission].includes("canUploadBooks")) {
+  if (roles[request.user.role].includes("canUploadBooks")) {
     return next();
   }
   return Response.INVALID_REQUEST({

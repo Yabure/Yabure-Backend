@@ -11,6 +11,12 @@ generator client {
   binaryTargets = ["native", "darwin"]
 }
 
+enum Role {
+  USER
+  ADMIN
+  MODERATOR
+}
+
 model user {
   id             String           @id @default(uuid())
   email          String           @unique
@@ -29,7 +35,7 @@ model user {
   subscribed     Boolean          @default(false)
   can_upload     Boolean          @default(false)
   plan_code      String?
-  permission     String
+  role           Role             @default(USER)
   plan           plans?           @relation(fields: [plan_code], references: [plan_code])
   expire         String?
   reset          String?          @unique

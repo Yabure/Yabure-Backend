@@ -16,37 +16,42 @@ const { v4: uuidv4 } = require("uuid");
 const bookService = {};
 
 bookService.uploadBook = async ({ body, user }) => {
-  if (!body.bookName || !body.bookName.value.trim())
-    throw new Error("Book Name is required");
-  if (!body || !body.categoryId || !body.categoryId.value.trim())
-    throw new Error("CategoryId is required");
+  try {
+    if (!body.bookName || !body.bookName.value.trim())
+      throw new Error("Book Name is required");
+    if (!body || !body.categoryId || !body.categoryId.value.trim())
+      throw new Error("CategoryId is required");
 
-  const interest = await Interest.findById(body.categoryId.value);
-  if (!interest) throw new Error("Category does not exist");
+    const interest = await Interest.findById(body.categoryId.value);
+    if (!interest) throw new Error("Category does not exist");
 
-  const bookNumber = await fileSystem.uploadBook(body.book);
+    const bookNumber = await fileSystem.uploadBook(body.book);
 
-  const data = {
-    author: user.id,
-    bookName: body.bookName.value.toLowerCase(),
-    bookNumber,
-    category: body.categoryId.value,
-    rating: {
-      one_star: 0,
-      two_star: 0,
-      three_star: 0,
-      four_star: 0,
-      five_star: 0,
-      total: 0,
-    },
-  };
+    const data = {
+      author: user.id,
+      bookName: body.bookName.value.toLowerCase(),
+      bookNumber,
+      category: body.categoryId.value,
+      rating: {
+        one_star: 0,
+        two_star: 0,
+        three_star: 0,
+        four_star: 0,
+        five_star: 0,
+        total: 0,
+      },
+    };
 
-  await Book.insert(data);
-  await Profile.addNotes(user);
+    console.log(data);
 
-  console.log("finised working");
+    await Book.insert(data);
+    await Profile.addNotes(user.id);
 
-  return true;
+    return true;
+  } catch (error) {
+    throw new Error(error);
+    console.log(error);
+  }
 };
 
 bookService.getAllBooks = async () => {
