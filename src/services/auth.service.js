@@ -55,10 +55,16 @@ authService.login = async (data, password) => {
       id: user.id,
       subscribed: user.subscribed,
       expire: user.expire,
+      permission: user.permission,
     });
     return {
       authToken,
-      data: _.pick(user, ["subscribed", "isVerified", "permission"]),
+      data: _.pick(user, [
+        "subscribed",
+        "isVerified",
+        "permission",
+        "can_upload",
+      ]),
     };
   } catch (error) {
     console.log(error);

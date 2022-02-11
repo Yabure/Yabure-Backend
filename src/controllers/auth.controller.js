@@ -21,7 +21,6 @@ authController.register = async (request, response) => {
       httpOnly: true,
       secure: false,
       sameSite: "None",
-      expires: new Date(addDateToCurrentDate(2)),
     });
     return Response.SUCCESS({
       response,
@@ -55,11 +54,10 @@ authController.login = async (request, response) => {
       httpOnly: true,
       secure: false,
       sameSite: "None",
-      expires: new Date(addDateToCurrentDate(2)),
     });
     return Response.SUCCESS({
       response,
-      data: {},
+      data,
       messsage: "Logged In Successfully",
       subscribed: data.subscribed,
     });

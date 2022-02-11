@@ -28,7 +28,7 @@ const sendPushNotification = async (message) => {
 
 const activateNotification = async ({ user, body }) => {
   if (body && body.token) {
-    const userData = await User.findById(user);
+    const userData = await User.findById(user.id);
     let devices;
     if (userData.devices === null) {
       devices = [];
@@ -36,7 +36,7 @@ const activateNotification = async ({ user, body }) => {
     devices = userData.devices;
     if (!devices.includes(body.token)) {
       devices.push(body.token);
-      await User.update(user, { devices });
+      await User.update(user.id, { devices });
     }
 
     return;
@@ -46,7 +46,7 @@ const activateNotification = async ({ user, body }) => {
 };
 
 const getNotifications = async ({ user }) => {
-  const notifications = await Notification.findById(user);
+  const notifications = await Notification.findById(user.id);
   return notifications;
 };
 

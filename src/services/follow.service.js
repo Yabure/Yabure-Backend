@@ -1,25 +1,22 @@
 const Followers = require("../data-access/followers.dao");
 
-const FollowersService = {}
+const FollowersService = {};
 
+FollowersService.follow = async ({ user, query }) => {
+  if (user.id === query.userId) throw new Error("you can't follow yourself");
+  if (!query || !query.userId) throw new Error("userId is required");
 
-FollowersService.follow = async ({user, query}) => {
+  const { userId } = query;
 
-    if(user === query.userId) throw new Error("you can't follow yourself");
-    if(!query || !query.userId) throw new Error("userId is required");
+  const { followers } = await Followers.findByUserId(userId);
 
-    const { userId } = query
+  if (followers.includes(user.id))
+    throw new Error("You are currently following this user");
+  followers.push(user.id);
 
-    const { followers } = await Followers.findByUserId(userId)
+  await Followers.update(userId, { followers });
 
-    if(followers.includes(user)) throw new Error("You are currently following this user")
-    followers.push(user)
+  return;
+};
 
-    await Followers.update(userId, { followers })
-
-
-    return
-}
-
-
-module.exports = FollowersService
+module.exports = FollowersService;
