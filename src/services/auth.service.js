@@ -36,7 +36,7 @@ authService.register = async (data) => {
 authService.adminRegisterUser = async (data) => {
   try {
     const user = await User.findByEmail(data.email);
-    if (user) throw new Error("user already exists");
+    if (user) throw new Error("User already exists");
     data.password = bcryptUtils.hashPassword(data.password);
     data.isVerified = true;
     data.subscribed = true;
@@ -47,7 +47,7 @@ authService.adminRegisterUser = async (data) => {
   } catch (error) {
     console.log(error);
     const err = validateErrorFormatter(error);
-    if (err !== "user already exists")
+    if (err.toLowerCase() !== "user already exists")
       throw new Error(
         "Sorry, we couldn't create your account at this time, try again later"
       );
@@ -79,9 +79,16 @@ authService.login = async (data, password) => {
       expire: user.expire,
       role: user.role,
     });
+    console.log(user);
     return {
       authToken,
-      data: _.pick(user, ["subscribed", "isVerified", "role", "can_upload"]),
+      data: _.pick(user, [
+        "subscribed",
+        "profile",
+        "isVerified",
+        "role",
+        "can_upload",
+      ]),
     };
   } catch (error) {
     console.log(error);

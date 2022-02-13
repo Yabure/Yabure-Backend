@@ -17,7 +17,7 @@
   "dependencies": {
     "@prisma/client": "^3.9.2",
     "aws-sdk": "^2.1073.0",
-    "axios": "^0.21.1",
+    "axios": "^0.25.0",
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
     "crypto": "^1.0.1",

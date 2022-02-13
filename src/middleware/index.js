@@ -1,11 +1,9 @@
 const authMiddleWare = require("./auth.middleware");
 
 const corsOptions = {
-  origin: "*",
-  optionsSuccessStatus: 200,
+  origin: true,
   allowedHeaders: ["Content-Type", "Authorization", process.env.AUTH_NAME],
   credentials: true,
-  methods: ["OPTIONS"],
 };
 
 const Middlewares = (fastify) => {

@@ -12,6 +12,7 @@ const Profile = {
             email: true,
             books: {
               select: {
+                id: true,
                 bookNumber: true,
                 bookName: true,
                 author: true,

@@ -29,7 +29,11 @@ authController.register = async (request, response) => {
     });
   } catch (err) {
     const errors = validateErrorFormatter(err);
-    return Response.INVALID_REQUEST({ response, errors, subscribed: false });
+    return Response.INVALID_REQUEST({
+      response,
+      message: errors,
+      subscribed: false,
+    });
   }
 };
 
@@ -45,7 +49,6 @@ authController.login = async (request, response) => {
       });
     }
 
-    console.log(addDateToCurrentDate(2));
     response.cookie(process.env.SESSION_NAME, authToken, {
       path: "/",
       name: "amiunwuienuf394j024j92n4in2i",
@@ -63,7 +66,11 @@ authController.login = async (request, response) => {
     });
   } catch (err) {
     const errors = validateErrorFormatter(err);
-    return Response.INVALID_REQUEST({ response, errors, subscribed: false });
+    return Response.INVALID_REQUEST({
+      response,
+      message: errors,
+      subscribed: false,
+    });
   }
 };
 

@@ -7,7 +7,7 @@ const authMiddleWare = (fastify) => {
   const publicRoute = ["auth", "interests", "rules", "webhook"];
 
   fastify.addHook("preValidation", async (request, response) => {
-    // console.log(request);
+    console.log(request);
     if (!request.routerPath)
       Response.INVALID_REQUEST({ response, errors: "Route Does Not Exist" });
     const routePath = request.routerPath.split("/");

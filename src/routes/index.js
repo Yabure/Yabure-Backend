@@ -9,6 +9,7 @@ const search = require("./search.routes");
 const payment = require("./payment.routes");
 const webhook = require("./webhook.routes");
 const notification = require("./notification.routes");
+const admin = require("./admin.routes");
 
 const routes = (fastify) => {
   fastify.register(auth, { prefix: "/v1/auth" });
@@ -22,6 +23,7 @@ const routes = (fastify) => {
   fastify.register(payment, { prefix: "/v1/subscribtions" });
   fastify.register(webhook, { prefix: "/v1/webhook" });
   fastify.register(notification, { prefix: "/v1/" });
+  fastify.register(admin, { prefix: "/v1/admin" });
 };
 
 module.exports = routes;
