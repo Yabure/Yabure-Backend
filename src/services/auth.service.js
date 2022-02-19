@@ -16,7 +16,7 @@ authService.register = async (data) => {
     if (user) throw new Error("user already exists");
     data.password = bcryptUtils.hashPassword(data.password);
     data.isVerified = false;
-    data.subscribed = true;
+    data.subscribed = false;
     data.role = "USER";
     data.expire = addDateToCurrentDate(7);
 
