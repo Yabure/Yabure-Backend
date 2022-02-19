@@ -134,6 +134,7 @@ model reading {
   id        String   @id @default(uuid())
   userId    String
   bookId    String
+  last_read String
   book      book     @relation(fields: [bookId], references: [id])
   user      user     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
@@ -144,6 +145,7 @@ model finished_books {
   id        String   @id @default(uuid())
   userId    String
   bookId    String
+  last_read String
   book      book     @relation(fields: [bookId], references: [id])
   user      user     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())

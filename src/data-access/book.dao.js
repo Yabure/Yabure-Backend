@@ -37,6 +37,11 @@ const Book = {
     return result;
   },
 
+  async countAll() {
+    let result = await prisma.book.count();
+    return result;
+  },
+
   async findByInterest(id, search) {
     if (search) {
       let result = await prisma.book.findMany({

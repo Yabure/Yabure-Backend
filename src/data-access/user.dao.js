@@ -18,6 +18,27 @@ const User = {
     return result;
   },
 
+  async countAllMod() {
+    let result = await prisma.user.count({
+      where: {
+        role: "MODERATOR",
+      },
+    });
+
+    return result;
+  },
+
+  async countAll(query) {
+    console.log(query);
+    let result = await prisma.user.count({
+      where: {
+        AND: query,
+      },
+    });
+
+    return result;
+  },
+
   async findPopularUploaders() {
     const result = await prisma.user.findMany({
       take: 20,
@@ -87,6 +108,7 @@ const User = {
         isVerified: data.isVerified,
         role: data.role,
         subscribed: data.subscribed,
+        expire: data.expire,
         profile: {
           create: {
             fullName: `${data.firstName} ${data.lastName}`.toLocaleLowerCase(),

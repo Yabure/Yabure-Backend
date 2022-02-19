@@ -11,3 +11,21 @@ exports.canUploadMiddleware = (request, reply, next) => {
     message: "Not Authorized To Upload Notes",
   });
 };
+
+exports.isAdmin = (request, reply, next) => {
+  if (!request.user.role === "ADMIN")
+    return Response.INVALID_REQUEST({
+      response: reply,
+      message: "Unauthorized",
+    });
+  if (
+    !request.headers.auth_key ||
+    request.headers.auth_key !== process.env.AUTH_KEY
+  )
+    return Response.INVALID_REQUEST({
+      response: reply,
+      message: "Invalid Key",
+    });
+
+  return next();
+};

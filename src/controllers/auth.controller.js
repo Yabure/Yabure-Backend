@@ -19,8 +19,8 @@ authController.register = async (request, response) => {
       resave: true,
       saveUninitialized: true,
       httpOnly: true,
-      secure: false,
-      sameSite: "None",
+      secure: process.env.ENVIRONMENT !== "development" ? true : false,
+      sameSite: process.env.ENVIRONMENT !== "development" ? "Strict" : "None",
     });
     return Response.SUCCESS({
       response,
@@ -38,6 +38,7 @@ authController.register = async (request, response) => {
 };
 
 authController.login = async (request, response) => {
+  console.log(request.body);
   try {
     const { authToken, data } = await authService.login(request.body);
     console.log(data);
@@ -51,12 +52,12 @@ authController.login = async (request, response) => {
 
     response.cookie(process.env.SESSION_NAME, authToken, {
       path: "/",
-      name: "amiunwuienuf394j024j92n4in2i",
+      name: "stuff",
       resave: true,
       saveUninitialized: true,
       httpOnly: true,
-      secure: false,
-      sameSite: "None",
+      secure: process.env.ENVIRONMENT !== "development" ? true : false,
+      sameSite: process.env.ENVIRONMENT !== "development" ? "Strict" : "None",
     });
     return Response.SUCCESS({
       response,
@@ -77,7 +78,15 @@ authController.login = async (request, response) => {
 authController.verifyUser = async (request, response) => {
   try {
     const { authToken } = await authService.verifyUser(request.query);
-    response.setCookie(process.env.SESSION_NAME, authToken, { path: "/" });
+    response.cookie(process.env.SESSION_NAME, authToken, {
+      path: "/",
+      name: "stuff",
+      resave: true,
+      saveUninitialized: true,
+      httpOnly: true,
+      secure: process.env.ENVIRONMENT !== "development" ? true : false,
+      sameSite: process.env.ENVIRONMENT !== "development" ? "Strict" : "None",
+    });
     return Response.SUCCESS({
       response,
       data: {},

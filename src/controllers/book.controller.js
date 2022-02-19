@@ -102,6 +102,20 @@ bookController.getReadingBooks = async (req, res) => {
   }
 };
 
+bookController.updateReadingLastRead = async (req, res) => {
+  try {
+    const result = await bookService.updateReadingLastRead(req);
+    return Response.SUCCESS({
+      response: res,
+      data: result,
+      message: "Request Successful",
+    });
+  } catch (err) {
+    const errors = await validateErrorFormatter(err);
+    return Response.INVALID_REQUEST({ response: res, errors });
+  }
+};
+
 bookController.addReadingBooks = async (req, res) => {
   try {
     await bookService.addReadingBooks(req);

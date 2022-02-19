@@ -7,10 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.js",
     "migrate": "npx prisma migrate dev --name init",
-    "seed": "npx prisma db seed --preview-feature"
+    "seed": "npx prisma db seed"
   },
   "prisma": {
-    "schema": "./src/prisma/schema.prisma"
+    "schema": "./src/prisma/schema.prisma",
+    "seed": "node src/prisma/seed.js"
   },
   "keywords": [],
   "author": "",

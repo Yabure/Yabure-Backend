@@ -1,17 +1,17 @@
 const jwtUtils = require("../utils/token.utils");
 const Response = require("../utils/errorResponse");
 const validateErrorFormatter = require("../utils/validateErrorFormatter");
+const User = require("../data-access/user.dao");
 
-const authMiddleWare = (fastify) => {
-  const SESSION_NAME = process.env.SESSION_NAME;
+const SESSION_NAME = process.env.SESSION_NAME;
+
+exports.isLoggedIn = (fastify) => {
   const publicRoute = ["auth", "interests", "rules", "webhook"];
 
   fastify.addHook("preValidation", async (request, response) => {
-    console.log(request);
     if (!request.routerPath)
       Response.INVALID_REQUEST({ response, errors: "Route Does Not Exist" });
     const routePath = request.routerPath.split("/");
-    console.log(request.cookies[SESSION_NAME]);
     const route =
       publicRoute.includes(routePath[2]) || publicRoute.includes(routePath[1])
         ? routePath[2]
@@ -20,6 +20,7 @@ const authMiddleWare = (fastify) => {
       try {
         if (request.cookies[SESSION_NAME]) {
           const user = jwtUtils.decrypt(request.cookies[SESSION_NAME]);
+          await isSubscribed(user);
           if (!user.subscribed)
             throw new Error(
               "You haven't subscribed or your subcription has expired"
@@ -37,9 +38,27 @@ const authMiddleWare = (fastify) => {
         });
       }
     }
-    // console.log("here")
     return;
   });
 };
 
-module.exports = authMiddleWare;
+const isSubscribed = async (user) => {
+  if (!user.expire) throw new Error("Your Subscription has expired");
+
+  if (new Date(user.expire) < Date.now()) {
+    const result = await User.countAll({
+      subscribed: {
+        equals: false,
+      },
+      expire: {
+        equals: user.expire,
+      },
+      id: {
+        equals: user.id,
+      },
+    });
+    if (result > 0) throw new Error("Your Subscription has expired");
+  }
+
+  return;
+};

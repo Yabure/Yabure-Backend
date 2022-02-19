@@ -146,16 +146,24 @@ bookService.getReadingBooks = async ({ user }) => {
   return result;
 };
 
+bookService.updateReadingLastRead = async ({ user, body }) => {
+  const data = {
+    last_read: body.last_read,
+  };
+
+  await Reading.update(user.id, data);
+  return;
+};
+
 bookService.addReadingBooks = async ({ user, body }) => {
   const data = {
     userId: user.id,
     bookId: body.book,
+    last_read: "0",
   };
 
   const result = await Reading.findOne(data);
   if (result) throw new Error("Book already added to your reading list");
-
-  console.log(result);
 
   await Reading.insert(data);
 
@@ -179,13 +187,13 @@ bookService.addFinishedBooks = async ({ user, body }) => {
   await Finished.insert({
     userId: user.id,
     bookId: body.book,
+    last_read: "100%",
   });
 
   return;
 };
 
 bookService.addExplanation = async ({ user, body }) => {
-  console.log(body);
   if (!body || !body.audio) throw new Error("Audio is required");
 
   const book = await Book.findOne(body.bookId.value);
@@ -195,14 +203,14 @@ bookService.addExplanation = async ({ user, body }) => {
     throw new Error("You can't add explanations to this book");
 
   const audio = await fileSystem.uploadAudio(body.audio);
-  console.log(book.id);
+
   let data = {
     userId: user.id,
     bookId: book.id,
     explanation: audio,
   };
 
-  console.log(await Explanation.insertOne(data));
+  await Explanation.insertOne(data);
 
   return;
 };

@@ -24,6 +24,7 @@ const book = (fastify, options, next) => {
     bookController.getExplanationsComments
   );
   fastify.post("/explanation/comments/reply", bookController.replyComment);
+  fastify.post("/reading/last-read", bookController.updateReadingLastRead);
   next();
 };
 

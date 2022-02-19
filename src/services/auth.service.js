@@ -6,6 +6,7 @@ const mail = require("./mail.service");
 const token = require("./token.service");
 const { v4: uuidv4 } = require("uuid");
 const validateErrorFormatter = require("../utils/validateErrorFormatter");
+const addDateToCurrentDate = require("../utils/date");
 
 const authService = {};
 
@@ -17,8 +18,7 @@ authService.register = async (data) => {
     data.isVerified = false;
     data.subscribed = true;
     data.role = "USER";
-
-    console.log(data);
+    data.expire = addDateToCurrentDate(7);
 
     const newUser = await User.insert(data);
     return newUser;
@@ -34,6 +34,7 @@ authService.register = async (data) => {
 };
 
 authService.adminRegisterUser = async (data) => {
+  const mailData = { ...data };
   try {
     const user = await User.findByEmail(data.email);
     if (user) throw new Error("User already exists");
@@ -43,6 +44,13 @@ authService.adminRegisterUser = async (data) => {
     data.role = "MODERATOR";
 
     const newUser = await User.insert(data);
+
+    mail.modAccountCreatedEmail({
+      name: mailData.firstName,
+      email: mailData.email,
+      password: mailData.password,
+    });
+
     return newUser;
   } catch (error) {
     console.log(error);
@@ -79,7 +87,7 @@ authService.login = async (data, password) => {
       expire: user.expire,
       role: user.role,
     });
-    console.log(user);
+
     return {
       authToken,
       data: _.pick(user, [
@@ -118,7 +126,13 @@ authService.verifyUser = async (data) => {
 
   await User.updateUserVerification(data.email);
 
-  const authToken = jwtUtils.generateToken(user.id);
+  const authToken = jwtUtils.generateToken({
+    id: user.id,
+    subscribed: user.subscribed,
+    expire: user.expire,
+    role: user.role,
+  });
+
   return { authToken };
 };
 

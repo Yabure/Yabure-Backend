@@ -2,18 +2,18 @@ const authValidation = require("../../validators/auth.validator");
 const validateErrorFormatter = require("../../utils/validateErrorFormatter");
 const authService = require("../../services/auth.service");
 const Response = require("../../utils/errorResponse");
+const {
+  getDashboardData,
+} = require("../../services/admin/admin.dashboard.service");
 
-const adminAuthController = {};
+const adminDashboardController = {};
 
-adminAuthController.register = async (request, response) => {
+adminDashboardController.getDashboardData = async (request, response) => {
   try {
-    const validatedData = await authValidation.registerValidation(request.body);
-    const data = await authService.adminRegisterUser(validatedData);
-
+    const result = await getDashboardData();
     return Response.SUCCESS({
+      data: result,
       response,
-      data,
-      message: "Registered Successfully",
     });
   } catch (err) {
     const errors = validateErrorFormatter(err);
@@ -25,4 +25,4 @@ adminAuthController.register = async (request, response) => {
   }
 };
 
-module.exports = adminAuthController;
+module.exports = adminDashboardController;
