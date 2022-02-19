@@ -64,11 +64,18 @@ const Reading = {
     }
   },
 
-  async update(userId, data) {
+  async update(userId, bookId, data) {
     try {
       const result = await prisma.reading.updateMany({
         where: {
-          userId,
+          AND: {
+            userId: {
+              equals: userId,
+            },
+            bookId: {
+              equals: bookId,
+            },
+          },
         },
         data,
       });

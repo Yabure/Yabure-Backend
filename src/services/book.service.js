@@ -147,11 +147,19 @@ bookService.getReadingBooks = async ({ user }) => {
 };
 
 bookService.updateReadingLastRead = async ({ user, body }) => {
+  console.log(body);
+  if (
+    !body ||
+    !body.bookId ||
+    !body.last_read ||
+    typeof body.last_read !== "string"
+  )
+    throw new Error("Invalid Data");
   const data = {
     last_read: body.last_read,
   };
 
-  await Reading.update(user.id, data);
+  await Reading.update(user.id, body.bookId, data);
   return;
 };
 
