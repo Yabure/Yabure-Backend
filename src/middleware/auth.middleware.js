@@ -25,6 +25,7 @@ exports.isLoggedIn = (fastify) => {
         }
         throw new Error("Unauthorized");
       } catch (err) {
+        console.log(err);
         const error = validateErrorFormatter(err);
         return Response.UNAUTHORIZED({
           response,

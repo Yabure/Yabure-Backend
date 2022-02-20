@@ -55,7 +55,7 @@ authService.adminRegisterUser = async (data) => {
   } catch (error) {
     console.log(error);
     const err = validateErrorFormatter(error);
-    if (err.toLowerCase() !== "user already exists")
+    if (err.toLowerCase() !== "User already exists")
       throw new Error(
         "Sorry, we couldn't create your account at this time, try again later"
       );
