@@ -21,11 +21,6 @@ exports.isLoggedIn = (fastify) => {
         if (request.cookies[SESSION_NAME]) {
           const user = jwtUtils.decrypt(request.cookies[SESSION_NAME]);
           await isSubscribed(user);
-          if (!user.subscribed)
-            throw new Error(
-              "You haven't subscribed or your subcription has expired"
-            );
-
           return (request.user = user);
         }
         throw new Error("Unauthorized");
