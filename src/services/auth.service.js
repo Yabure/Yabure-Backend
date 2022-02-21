@@ -12,7 +12,7 @@ const authService = {};
 
 authService.register = async (data) => {
   try {
-    const user = await User.findByEmail(data.email);
+    const user = await User.findByEmail(data.email.toLowerCase());
     if (user) throw new Error("user already exists");
     data.password = bcryptUtils.hashPassword(data.password);
     data.isVerified = false;
