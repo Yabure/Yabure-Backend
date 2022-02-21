@@ -10,10 +10,10 @@ const CookieOptions = {
   // secure: process.env.ENVIRONMENT !== "development" ? true : false,
   secure: false,
   // sameSite: process.env.ENVIRONMENT !== "development" ? "Strict" : "None",
-  sameSite: "Lax",
+  sameSite: "None",
   resave: true,
   saveUninitialized: true,
-  httpOnly: true,
+  // httpOnly: true,
 };
 
 const authController = {};
