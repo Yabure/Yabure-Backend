@@ -7,13 +7,13 @@ const Response = require("../utils/errorResponse");
 const CookieOptions = {
   path: "/",
   name: "stuff",
-  resave: true,
-  saveUninitialized: true,
-  httpOnly: true,
   // secure: process.env.ENVIRONMENT !== "development" ? true : false,
   secure: process.env.ENVIRONMENT !== "development" ? true : false,
   // sameSite: process.env.ENVIRONMENT !== "development" ? "Strict" : "None",
   sameSite: "None",
+  resave: true,
+  saveUninitialized: true,
+  httpOnly: true,
 };
 
 const authController = {};
