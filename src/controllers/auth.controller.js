@@ -11,7 +11,7 @@ const CookieOptions = {
   saveUninitialized: true,
   httpOnly: true,
   // secure: process.env.ENVIRONMENT !== "development" ? true : false,
-  secure: false,
+  secure: process.env.ENVIRONMENT !== "development" ? true : false,
   // sameSite: process.env.ENVIRONMENT !== "development" ? "Strict" : "None",
   sameSite: "None",
 };
