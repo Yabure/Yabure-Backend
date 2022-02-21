@@ -1,4 +1,4 @@
-const { isLoggedIn, isSubscribed } = require("./auth.middleware");
+const { isLoggedIn } = require("./auth.middleware");
 
 const corsOptions = {
   origin:

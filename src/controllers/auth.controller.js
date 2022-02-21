@@ -2,7 +2,19 @@ const authValidation = require("../validators/auth.validator");
 const validateErrorFormatter = require("../utils/validateErrorFormatter");
 const authService = require("../services/auth.service");
 const Response = require("../utils/errorResponse");
-const addDateToCurrentDate = require("../utils/date");
+// const addDateToCurrentDate = require("../utils/date");
+
+const CookieOptions = {
+  path: "/",
+  name: "stuff",
+  resave: true,
+  saveUninitialized: true,
+  httpOnly: true,
+  // secure: process.env.ENVIRONMENT !== "development" ? true : false,
+  secure: false,
+  // sameSite: process.env.ENVIRONMENT !== "development" ? "Strict" : "None",
+  sameSite: "None",
+};
 
 const authController = {};
 
@@ -14,13 +26,7 @@ authController.register = async (request, response) => {
     );
 
     response.cookie(process.env.SESSION_NAME, authToken, {
-      path: "/",
-      name: "amiunwuienuf394j024j92n4in2i",
-      resave: true,
-      saveUninitialized: true,
-      httpOnly: true,
-      secure: process.env.ENVIRONMENT !== "development" ? true : false,
-      sameSite: process.env.ENVIRONMENT !== "development" ? "Strict" : "None",
+      ...CookieOptions,
     });
     return Response.SUCCESS({
       response,
@@ -51,13 +57,7 @@ authController.login = async (request, response) => {
     }
 
     response.cookie(process.env.SESSION_NAME, authToken, {
-      path: "/",
-      name: "stuff",
-      resave: true,
-      saveUninitialized: true,
-      httpOnly: true,
-      secure: process.env.ENVIRONMENT !== "development" ? true : false,
-      sameSite: process.env.ENVIRONMENT !== "development" ? "Strict" : "None",
+      ...CookieOptions,
     });
     return Response.SUCCESS({
       response,
@@ -79,13 +79,7 @@ authController.verifyUser = async (request, response) => {
   try {
     const { authToken } = await authService.verifyUser(request.query);
     response.cookie(process.env.SESSION_NAME, authToken, {
-      path: "/",
-      name: "stuff",
-      resave: true,
-      saveUninitialized: true,
-      httpOnly: true,
-      secure: process.env.ENVIRONMENT !== "development" ? true : false,
-      sameSite: process.env.ENVIRONMENT !== "development" ? "Strict" : "None",
+      ...CookieOptions,
     });
     return Response.SUCCESS({
       response,
