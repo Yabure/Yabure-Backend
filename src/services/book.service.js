@@ -344,11 +344,10 @@ bookService.replyNewComment = async ({ body, user }) => {
   const comment = await New_Comments.findByBookId(body.bookId);
   if (!comment) throw new Error("Comments does not exist");
 
-  // console.log(comment)
-
   const { userId, username, fullName } = await Profile.findById(user.id);
 
-  const result = comment[0].comments.find((comment) => {
+  const result = await comment[0].comments.find((comment) => {
+    console.log(comment.id);
     if (comment.id === body.commentId) {
       comment.replies.push({
         userId: userId,
@@ -359,7 +358,7 @@ bookService.replyNewComment = async ({ body, user }) => {
     }
   });
 
-  await New_Comments.update(body.bookId, { comments: comment });
+  await New_Comments.update(body.bookId, { comments: comment[0].comments });
 
   return true;
 };
