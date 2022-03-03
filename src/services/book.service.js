@@ -247,7 +247,8 @@ bookService.addNewComments = async ({ user, body }) => {
     user.id
   );
 
-  const { bookId, comment } = body;
+  const bookId = body.bookId.trim();
+  const comment = body.comment.trim();
 
   const comments = await New_Comments.findByBookId(bookId);
 
@@ -261,7 +262,7 @@ bookService.addNewComments = async ({ user, body }) => {
             userId: userId,
             fullName: fullName,
             username: username,
-            comment: comment.trim(),
+            comment: comment,
             replies: [],
           },
         ],
