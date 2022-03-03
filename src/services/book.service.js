@@ -295,7 +295,8 @@ bookService.addNewComments = async ({ user, body }) => {
 };
 
 bookService.getNewComments = async ({ params }) => {
-  const result = await New_Comments.findByBookId(params.bookId);
+  console.log(params);
+  const result = await New_Comments.findByBookId(params.explanationsId);
 
   return result;
 };
