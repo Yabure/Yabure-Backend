@@ -4,7 +4,6 @@ const _ = require("lodash");
 
 const New_Comments = {
   async findByBookId(id) {
-    console.log(id);
     let result = await prisma.new_comments.findUnique({
       where: { bookId: id },
     });
