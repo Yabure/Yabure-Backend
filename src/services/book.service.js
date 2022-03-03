@@ -275,7 +275,7 @@ bookService.addNewComments = async ({ user, body }) => {
   }
 
   try {
-    comments[0].comments.push({
+    comments.comments.push({
       id: uuidv4(),
       fullName: fullName,
       username: username,
@@ -284,7 +284,7 @@ bookService.addNewComments = async ({ user, body }) => {
       replies: [],
     });
     await New_Comments.update(bookId, {
-      comments: comments[0].comments,
+      comments: comments.comments,
     });
   } catch (error) {
     console.log(error);
@@ -295,7 +295,6 @@ bookService.addNewComments = async ({ user, body }) => {
 };
 
 bookService.getNewComments = async ({ params }) => {
-  console.log(params);
   const result = await New_Comments.findByBookId(params.explanationsId);
 
   return result;
