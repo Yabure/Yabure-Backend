@@ -30,9 +30,14 @@ profileService.getProfile = async ({ user }) => {
   return userProfile;
 };
 
-profileService.getProfileById = async ({ id }) => {
-  const result = await Profile.findById(id);
+profileService.getProfileById = async ({ params, user }) => {
+  const result = await Profile.findById(params.id);
   if (!result) throw new Error("user not found");
+
+  result.following = result.user.followers.followers.includes(user.id)
+    ? true
+    : false;
+
   return result;
 };
 

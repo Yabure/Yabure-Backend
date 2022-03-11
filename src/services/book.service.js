@@ -252,6 +252,8 @@ bookService.addNewComments = async ({ user, body }) => {
 
   const comments = await New_Comments.findByBookId(bookId);
 
+  console.log(new Date(Date.now()).toLocaleDateString());
+
   if (comments.length < 1) {
     try {
       await New_Comments.insert({
@@ -262,7 +264,9 @@ bookService.addNewComments = async ({ user, body }) => {
             userId: userId,
             fullName: fullName,
             username: username,
-            comment: comment,
+            comment: comment.trim(),
+            date: new Date(),
+            picture,
             replies: [],
           },
         ],
@@ -282,12 +286,15 @@ bookService.addNewComments = async ({ user, body }) => {
       username: username,
       userId: userId,
       comment: comment.trim(),
+      date: new Date(),
+      picture,
       replies: [],
     });
     await New_Comments.update(bookId, {
       comments: comments.comments,
     });
   } catch (error) {
+    console.log("error here");
     console.log(error);
     throw new Error("Oops! Somthing went wrong!");
   }

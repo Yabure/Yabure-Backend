@@ -10,6 +10,7 @@ const Profile = {
         user: {
           select: {
             email: true,
+            can_upload: true,
             books: {
               select: {
                 id: true,
@@ -17,6 +18,11 @@ const Profile = {
                 bookName: true,
                 author: true,
                 rating: true,
+              },
+            },
+            followers: {
+              select: {
+                followers: true,
               },
             },
           },
