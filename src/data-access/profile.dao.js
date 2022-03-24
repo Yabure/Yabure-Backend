@@ -11,6 +11,7 @@ const Profile = {
           select: {
             email: true,
             can_upload: true,
+            subscribed: true,
             books: {
               select: {
                 id: true,
