@@ -55,8 +55,11 @@ bookService.uploadBook = async ({ body, user }) => {
   }
 };
 
-bookService.uploadKeyBook = async ({ body, headers }) => {
+bookService.uploadKeyBook = async ({ body, headers, header }) => {
   try {
+    console.log(headers, "aaa");
+    console.log(header, "bbb");
+
     if (!headers.auth_key) throw new Error("Invalid Key first");
     if (!body.bookName || !body.bookName.value.trim())
       throw new Error("Book Name is required");
