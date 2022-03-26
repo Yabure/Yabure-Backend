@@ -42,6 +42,7 @@ model user {
   isVerified     Boolean          @default(false)
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
+  upload_keys    upload_keys?
 }
 
 model token {
@@ -205,4 +206,11 @@ model new_comments {
   book      book     @relation(fields: [bookId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model upload_keys {
+  id     String @id @default(uuid())
+  key    String @unique
+  userId String @unique
+  user   user   @relation(fields: [userId], references: [id])
 }

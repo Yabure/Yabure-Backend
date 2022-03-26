@@ -12,6 +12,7 @@ const Explanation = require("../data-access/explanation.dao");
 const Comments = require("../data-access/comments.dao");
 const New_Comments = require("../data-access/new_coments.das");
 const { v4: uuidv4 } = require("uuid");
+const { getUserByKey } = require("../data-access/user.dao");
 
 const bookService = {};
 
@@ -51,6 +52,41 @@ bookService.uploadBook = async ({ body, user }) => {
   } catch (error) {
     throw new Error(error);
     console.log(error);
+  }
+};
+
+bookService.uploadKeyBook = async ({ body, user, headers }) => {
+  try {
+    if (!headers.auth_key) throw new Error("Invalid Key");
+    if (!body.bookName || !body.bookName.value.trim())
+      throw new Error("Book Name is required");
+
+    const user = await getUserByKey(headers.auth_key);
+    if (!user) throw new Error("Invalid Key");
+
+    const bookNumber = await fileSystem.uploadBook(body.book);
+
+    const data = {
+      author: user.userId,
+      bookName: body.bookName.value.toLowerCase(),
+      bookNumber,
+      category: body.categoryId.value,
+      rating: {
+        one_star: 0,
+        two_star: 0,
+        three_star: 0,
+        four_star: 0,
+        five_star: 0,
+        total: 0,
+      },
+    };
+
+    await Book.insert(data);
+    await Profile.addNotes(user.userId);
+
+    return true;
+  } catch (error) {
+    throw new Error(error);
   }
 };
 
@@ -251,8 +287,6 @@ bookService.addNewComments = async ({ user, body }) => {
   const comment = body.comment.trim();
 
   const comments = await New_Comments.findByBookId(bookId);
-
-  console.log(new Date(Date.now()).toLocaleDateString());
 
   if (comments.length < 1) {
     try {

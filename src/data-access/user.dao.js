@@ -27,6 +27,15 @@ const User = {
 
     return result;
   },
+  async getUserByKey(key) {
+    let result = await prisma.upload_keys.findUnique({
+      where: {
+        key,
+      },
+    });
+
+    return result;
+  },
 
   async countAll(query) {
     console.log(query);

@@ -24,6 +24,7 @@ const routes = (fastify) => {
   fastify.register(webhook, { prefix: "/v1/webhook" });
   fastify.register(notification, { prefix: "/v1/" });
   fastify.register(admin, { prefix: "/v1/admin" });
+  fastify.register(book, { prefix: "/v1/key" });
 };
 
 module.exports = routes;

@@ -6,7 +6,7 @@ const User = require("../data-access/user.dao");
 const SESSION_NAME = process.env.SESSION_NAME;
 
 exports.isLoggedIn = (fastify) => {
-  const publicRoute = ["auth", "interests", "rules", "webhook"];
+  const publicRoute = ["auth", "interests", "rules", "webhook", "key"];
 
   fastify.addHook("preValidation", async (request, response) => {
     if (!request.routerPath)

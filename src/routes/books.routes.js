@@ -25,6 +25,8 @@ const book = (fastify, options, next) => {
   );
   fastify.post("/explanation/comments/reply", bookController.replyComment);
   fastify.post("/reading/last-read", bookController.updateReadingLastRead);
+
+  fastify.post("/upload/book", bookController.uploadKeyBook);
   next();
 };
 

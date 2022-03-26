@@ -19,6 +19,20 @@ bookController.uploadBook = async (req, res) => {
   }
 };
 
+bookController.uploadKeyBook = async (req, res) => {
+  try {
+    await bookService.uploadKeyBook(req);
+    Response.SUCCESS({
+      response: res,
+      data: {},
+      message: "book uploaded successfully",
+    });
+  } catch (error) {
+    const errors = validateErrorFormatter(error);
+    return Response.INVALID_REQUEST({ response: res, errors });
+  }
+};
+
 bookController.getAllBooks = async (req, res) => {
   if (!req.query.id) {
     try {
