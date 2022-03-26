@@ -1,8 +1,7 @@
 const { isLoggedIn } = require("./auth.middleware");
 
 const corsOptions = {
-  origin:
-    process.env.ENVIRONMENT !== "development" ? true : "http://localhost:3001",
+  origin: true,
   optionsSuccessStatus: 200,
   allowedHeaders: ["Content-Type", "Authorization", "auth_key", "Accept"],
   credentials: true,
