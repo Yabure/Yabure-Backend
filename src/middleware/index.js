@@ -1,7 +1,10 @@
 const { isLoggedIn } = require("./auth.middleware");
 
 const corsOptions = {
-  origin: true,
+  origin:
+    process.env.ENVIRONMENT !== "development"
+      ? true
+      : "https://yabure-upload.netlify.app",
   optionsSuccessStatus: 200,
   allowedHeaders: ["Content-Type", "Authorization", "auth_key", "Accept"],
   credentials: true,
