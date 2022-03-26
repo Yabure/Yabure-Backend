@@ -57,14 +57,11 @@ bookService.uploadBook = async ({ body, user }) => {
 
 bookService.uploadKeyBook = async ({ body, headers, header }) => {
   try {
-    console.log(headers, "aaa");
-    console.log(header, "bbb");
-
-    if (!headers.auth_key) throw new Error("Invalid Key first");
+    if (!body.authKey.value) throw new Error("Invalid Key first");
     if (!body.bookName || !body.bookName.value.trim())
       throw new Error("Book Name is required");
 
-    const user = await getUserByKey(headers.auth_key);
+    const user = await getUserByKey(body.authKey.value);
     if (!user) throw new Error("Invalid Key second");
 
     const bookNumber = await fileSystem.uploadBook(body.book);
