@@ -1,2 +1,2 @@
 web: npm start
-release: npx prisma init
+release: npx prisma generate
