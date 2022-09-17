@@ -7,122 +7,210 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "darwin"]
+}
+
+enum Role {
+  USER
+  ADMIN
+  MODERATOR
 }
 
 model user {
-  id String @id @default(uuid()) 
-  email String @unique
-  password String
-  average_rating Float? @default(0)
-  interest user_interest?
-  account account?
-  profile profile?
-  followers followers?
-  books book[]
-  isVerified Boolean @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String           @id @default(uuid())
+  email          String           @unique
+  password       String
+  devices        String[]
+  average_rating Float?           @default(0)
+  interest       user_interest?
+  account        account?
+  profile        profile?
+  followers      followers?
+  comments       comments[]
+  books          book[]
+  finished_books finished_books[]
+  reading        reading[]
+  explanations   explanations[]
+  subscribed     Boolean          @default(false)
+  can_upload     Boolean          @default(false)
+  plan_code      String?
+  role           Role             @default(USER)
+  plan           plans?           @relation(fields: [plan_code], references: [plan_code])
+  expire         String?
+  reset          String?          @unique
+  isVerified     Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  upload_keys    upload_keys?
 }
 
 model token {
-  id String @id @default(uuid()) 
-  email String @unique
-  token String 
+  id        String   @id @default(uuid())
+  email     String   @unique
+  token     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model interest {
-  id String @id @default(uuid()) 
-  field String @unique
-  interests String[] 
-  book book[]
+  id        String   @id @default(uuid())
+  field     String   @unique
+  interests String[]
+  book      book[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model profile {
-  id String @id @default(uuid())
-  userId String @unique
-  fullName String
-  username String @unique
-  picture String  @default("null")
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  fullName    String
+  username    String   @unique
+  picture     String   @default("null")
   phoneNumber String
-  notes Int @default(0)
-  streams Int @default(0)
-  user user @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  notes       Int      @default(0)
+  streams     Int      @default(0)
+  user        user     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model account {
-  id String @id @default(uuid())
-  userId String @unique
-  user user @relation(fields: [userId], references: [id])
-  accountNumber String @unique
-  bank String 
-  accountName String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String   @id @default(uuid())
+  userId        String   @unique
+  user          user     @relation(fields: [userId], references: [id])
+  accountNumber String   @unique
+  bank          String
+  accountName   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 model user_interest {
-  id String @id @default(uuid())
-  userId String @unique
-  interest String[]
-  user user @relation(fields: [userId], references: [id])
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  interest  String[]
+  user      user     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
 }
 
 model rule {
-  id String @id @default(uuid()) 
-  type String @unique
-  rule String
+  id        String   @id @default(uuid())
+  type      String   @unique
+  rule      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model book {
-  id String @id @default(uuid())
-  author String 
-  bookName String
-  bookNumber String @unique
-  category String 
-  rating Json?
-  reading reading[]
+  id             String           @id @default(uuid())
+  author         String
+  bookName       String
+  bookNumber     String           @unique
+  category       String
+  new_comments   new_comments?
+  explanations   explanations[]
+  rating         Json?
+  reading        reading[]
   finished_books finished_books[]
-  interest interest @relation(fields: [category], references: [id])
-  user user @relation(fields: [author], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  interest       interest         @relation(fields: [category], references: [id])
+  user           user             @relation(fields: [author], references: [id])
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
 }
 
 model followers {
-  id String @id @default(uuid())
-  userId String @unique
+  id        String   @id @default(uuid())
+  userId    String   @unique
   followers String[]
-  user user @relation(fields: [userId], references: [id])
+  user      user     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model reading {
-  id String @id @default(uuid())
-  userId String @unique
-  bookId String 
-  book book @relation(fields: [bookId], references: [id])
+  id        String   @id @default(uuid())
+  userId    String
+  bookId    String
+  last_read String
+  book      book     @relation(fields: [bookId], references: [id])
+  user      user     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model finished_books {
-  id String @id @default(uuid())
-  userId String @unique
-  bookId String 
-  book book @relation(fields: [bookId], references: [id])
+  id        String   @id @default(uuid())
+  userId    String
+  bookId    String
+  last_read String
+  book      book     @relation(fields: [bookId], references: [id])
+  user      user     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model explanations {
+  id          String     @id @default(uuid())
+  userId      String
+  bookId      String
+  explanation String
+  comments    comments[]
+  book        book       @relation(fields: [bookId], references: [id])
+  user        user       @relation(fields: [userId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model comments {
+  id             String       @id @default(uuid())
+  userId         String
+  explanationsId String
+  comment        String
+  replies        Json[]
+  explanations   explanations @relation(fields: [explanationsId], references: [id])
+  user           user         @relation(fields: [userId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model plans {
+  id          String @id @default(uuid())
+  name        String @unique
+  interval    String
+  amount      String @unique
+  user        user[]
+  view_amount String @unique
+  plan_code   String @unique
+  // createdAt DateTime @default(now())
+  // updatedAt DateTime @updatedAt
+}
+
+model notifications {
+  id        String   @id @default(uuid())
+  message   String[]
+  recipient String
+  read      String
+  url       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model new_comments {
+  id        String   @id @default(uuid())
+  comments  Json[]
+  bookId    String   @unique
+  book      book     @relation(fields: [bookId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model upload_keys {
+  id     String @id @default(uuid())
+  key    String @unique
+  userId String @unique
+  user   user   @relation(fields: [userId], references: [id])
 }

@@ -18,7 +18,6 @@ const UserInterest = {
     //   },
   
       async insert(user, interest) {
-        console.log(user)
         const result = await prisma.user_interest.upsert  ({
           where: { userId: user},
           update: { interest },

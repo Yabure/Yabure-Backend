@@ -1,28 +1,67 @@
 const jwtUtils = require("../utils/token.utils");
-const Response = require("../utils/errorResponse")
+const Response = require("../utils/errorResponse");
+const validateErrorFormatter = require("../utils/validateErrorFormatter");
+const User = require("../data-access/user.dao");
 
+const SESSION_NAME = process.env.SESSION_NAME;
 
-const authMiddleWare = (fastify) => {
-    const SESSION_NAME = process.env.SESSION_NAME
-    const publicRoute = ["auth", "interests", "rules"]
+exports.isLoggedIn = (fastify) => {
+  const publicRoute = [
+    "auth",
+    "interests",
+    "rules",
+    "webhook",
+    "key",
+    "subscribtions",
+  ];
 
-    fastify.addHook("preValidation", async (request, response) => {
-        if(!request.routerPath) Response.INVALID_REQUEST({response, errors: "Route Does Not Exist"})
-        const routePath = request.routerPath.split("/")
-        const route = publicRoute.includes(routePath[2]) || publicRoute.includes(routePath[1]) ? routePath[2] : ''
-        if(route === '') {
-            try {
-                const token = request.cookies[SESSION_NAME]
-                const user = jwtUtils.decrypt(token)
-                return request.user = user.id
-            } catch (err) {
-                return Response.INVALID_REQUEST({response, errors: "Unauthorized"})
-            }
-
+  fastify.addHook("preValidation", async (request, response) => {
+    if (!request.routerPath)
+      Response.INVALID_REQUEST({ response, errors: "Route Does Not Exist" });
+    const routePath = request.routerPath.split("/");
+    const route =
+      publicRoute.includes(routePath[2]) || publicRoute.includes(routePath[1])
+        ? routePath[2]
+        : "";
+    if (route === "") {
+      try {
+        if (request.cookies[SESSION_NAME]) {
+          const user = jwtUtils.decrypt(request.cookies[SESSION_NAME]);
+          await isSubscribed(user);
+          return (request.user = user);
         }
-        // console.log("here")
-        return;
-    });
-}
+        throw new Error("Unauthorized");
+      } catch (err) {
+        console.log(err);
+        const error = validateErrorFormatter(err);
+        return Response.UNAUTHORIZED({
+          response,
+          message: error ? error : "Unauthorized",
+          subscribed: false,
+        });
+      }
+    }
+    return;
+  });
+};
 
-module.exports = authMiddleWare
+const isSubscribed = async (user) => {
+  if (!user.expire) throw new Error("Your Subscription has expired");
+
+  if (new Date(user.expire) < Date.now()) {
+    const result = await User.countAll({
+      subscribed: {
+        equals: false,
+      },
+      expire: {
+        equals: user.expire,
+      },
+      id: {
+        equals: user.id,
+      },
+    });
+    if (result > 0) throw new Error("Your Subscription has expired");
+  }
+
+  return;
+};

@@ -1,34 +1,31 @@
-const Interest = require("../data-access/interest.dao")
-const User = require("../data-access/user.dao")
-const UserInterest = require("../data-access/userInterest.dao")
-const ratingService = require("./rating.service")
+const Interest = require("../data-access/interest.dao");
+const User = require("../data-access/user.dao");
+const UserInterest = require("../data-access/userInterest.dao");
+const ratingService = require("./rating.service");
 
-const userService = {}
+const userService = {};
 
-userService.storeInterest = async({interests}, user) => {
-    const res = await Interest.findByInterest(interests);
-    if(!res) throw new Error("Specified Interests Does Not Exists");
+userService.storeInterest = async ({ interests }, user) => {
+  const res = await Interest.findByInterest(interests);
+  if (!res) throw new Error("Specified Interests Does Not Exists");
 
-    const interest = await UserInterest.insert(user, res);
-    return interest;
-}
-
+  const interest = await UserInterest.insert(user.id, res);
+  return interest;
+};
 
 userService.addRatings = async (body) => {
-    await ratingService.rate(body);
-    return;
-}
+  await ratingService.rate(body);
+  return;
+};
 
 userService.gtePopularUploaders = async () => {
-   const result = await User.findPopularUploaders();
+  const result = await User.findPopularUploaders();
 
-   const sortedData = result.sort((a, b) => {
-    return b.average_rating - a.average_rating
-   });
+  const sortedData = result.sort((a, b) => {
+    return b.average_rating - a.average_rating;
+  });
 
-   return sortedData
-}
+  return sortedData;
+};
 
-
-
-module.exports = userService 
+module.exports = userService;

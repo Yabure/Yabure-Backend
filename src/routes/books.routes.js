@@ -1,14 +1,33 @@
-const bookController = require("../controllers/book.controller")
+const bookController = require("../controllers/book.controller");
+const { canUploadMiddleware } = require("../middleware/roles.middleware");
 
-const book  = (fastify, options, next) => {
-    fastify.post("/upload", bookController.uploadPdf);
-    fastify.get("/", bookController.getAllBooks);
-    fastify.get("/new", bookController.getNewBooks);
-    fastify.get("/suggested", bookController.getSuggestedBooks);
-    fastify.get("/reading", bookController.getReadingBooks);
-    fastify.get("/finished", bookController.getFinishedBooks);
-    fastify.post("/rate", bookController.rateBook);
-    next();
-}
+const book = (fastify, options, next) => {
+  fastify.post(
+    "/upload",
+    { preHandler: [canUploadMiddleware] },
+    bookController.uploadBook
+  );
+  fastify.get("/", bookController.getAllBooks);
+  fastify.get("/new", bookController.getNewBooks);
+  fastify.get("/suggested", bookController.getSuggestedBooks);
+  fastify.get("/reading", bookController.getReadingBooks);
+  fastify.post("/reading", bookController.addReadingBooks);
+  fastify.get("/finished", bookController.getFinishedBooks);
+  fastify.post("/finished", bookController.addFinishedBooks);
+  fastify.post("/rate", bookController.rateBook);
 
-module.exports = book
+  fastify.post("/explanation", bookController.addExplanation);
+  fastify.get("/explanation/:bookId", bookController.getExplanations);
+  fastify.post("/explanation/comments", bookController.addComments);
+  fastify.get(
+    "/explanation/comments/:explanationsId",
+    bookController.getExplanationsComments
+  );
+  fastify.post("/explanation/comments/reply", bookController.replyComment);
+  fastify.post("/reading/last-read", bookController.updateReadingLastRead);
+
+  fastify.post("/upload/book", bookController.uploadKeyBook);
+  next();
+};
+
+module.exports = book;
