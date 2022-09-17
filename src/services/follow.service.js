@@ -1,25 +1,47 @@
 const Followers = require("../data-access/followers.dao");
+const { removeOneFromArray } = require("../utils/helpers");
 
-const FollowersService = {}
+const FollowersService = {};
 
+FollowersService.follow = async ({ user, query }) => {
+  console.log(user.id);
+  console.log(query.userId);
+  if (user.id === query.userId) throw new Error("you can't follow yourself");
+  if (!query || !query.userId) throw new Error("userId is required");
 
-FollowersService.follow = async ({user, query}) => {
+  const { userId } = query;
 
-    if(user === query.userId) throw new Error("you can't follow yourself");
-    if(!query || !query.userId) throw new Error("userId is required");
+  const followersData = await Followers.findByUserId(userId);
+  console.log(followersData);
+  if (!followersData)
+    throw new Error("User does not exist or account may be deleted");
 
-    const { userId } = query
+  const { followers } = followersData;
 
-    const { followers } = await Followers.findByUserId(userId)
+  if (followers.includes(user.id))
+    throw new Error("You are currently following this user");
+  followers.push(user.id);
 
-    if(followers.includes(user)) throw new Error("You are currently following this user")
-    followers.push(user)
+  await Followers.update(userId, { followers });
 
-    await Followers.update(userId, { followers })
+  return;
+};
 
+FollowersService.unFollow = async ({ user, query }) => {
+  if (!query || !query.userId) throw new Error("userId is required");
 
-    return
-}
+  const { userId } = query;
 
+  const { followers } = await Followers.findByUserId(userId);
 
-module.exports = FollowersService
+  if (!followers.includes(user.id))
+    throw new Error("You are currently not following this user");
+
+  const newFollwers = await removeOneFromArray(followers, user.id);
+
+  await Followers.update(userId, { followers: newFollwers });
+
+  return;
+};
+
+module.exports = FollowersService;

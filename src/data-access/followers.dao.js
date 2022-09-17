@@ -11,7 +11,6 @@ const Followers = {
     },
 
     async update(userId, data) {
-        console.log(data)
         const result = await prisma.followers.update({ 
             where: { userId },
             data
