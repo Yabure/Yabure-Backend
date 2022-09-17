@@ -2,11 +2,11 @@
   "name": "yabure",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.js",
-    "npm start": "node server.js",
+    "start": "node server.js",
     "migrate": "npx prisma migrate dev --name init",
     "migrate-prod": "npx prisma migrate deploy",
     "seed": "npx prisma db seed"
