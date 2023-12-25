@@ -6,3 +6,5 @@ node_modules
 package-lock.json
 # /src/prisma/migrations
 # firebase_sdk_config.json
+.DS_Store
+/src/.DS_Store
