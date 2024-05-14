@@ -7,6 +7,9 @@ const token = require("./token.service");
 const { v4: uuidv4 } = require("uuid");
 const validateErrorFormatter = require("../utils/validateErrorFormatter");
 const addDateToCurrentDate = require("../utils/date");
+const crypto = require("crypto");
+const { decryptaHash } = require("../utils/crypto");
+const { default: axios } = require("axios");
 
 const authService = {};
 
@@ -15,7 +18,7 @@ authService.register = async (data) => {
     const user = await User.findByEmail(data.email.toLowerCase());
     if (user) throw new Error("user already exists");
     data.password = bcryptUtils.hashPassword(data.password);
-    data.isVerified = false;
+    data.isVerified = true;
     data.subscribed = false;
     data.role = "USER";
     data.expire = addDateToCurrentDate(7);
@@ -65,21 +68,67 @@ authService.adminRegisterUser = async (data) => {
 
 authService.login = async (data, password) => {
   try {
-    const user = await User.findByEmail(data.email);
-    if (!user) throw new Error("User does not exists");
+    const authKey = decryptaHash(data.data);
 
-    data.password = password ? password : data.password;
-    const validPassword = await bcryptUtils.verifyPassword(
-      data.password,
-      user.password
+    const userData = await axios.get(
+      `${process.env.KINDE_URL}/oauth2/user_profile`,
+      {
+        headers: {
+          Authorization: `Bearer ${authKey}`,
+        },
+      }
     );
-    if (!validPassword) throw new Error("invalid email or password");
 
-    if (!user.isVerified) {
-      const verifyToken = await token.generateVerificationToken(user.email);
-      await mail.sendVerificationEmail(user, verifyToken);
-      return { data: _.pick(user, ["firstName", "isVerified", "email"]) };
+    if (userData.statusText !== "OK") {
+      throw new Error("Invalid Credentials");
     }
+
+    const user = await User.findByEmail(userData.data.preferred_email);
+
+    if (!user) {
+      await authService.register({
+        firstName: userData.data.first_name,
+        lastName: userData.data.last_name,
+        email: userData.data.preferred_email,
+        phoneNumber: "9045391299",
+        password: "qrq3rqfqc",
+      });
+
+      const newUser = await User.findByEmail(userData.data.preferred_email);
+
+      // if (!newUser.isVerified) {
+      //   const verifyToken = await token.generateVerificationToken(
+      //     newUser.email
+      //   );
+      //   await mail.sendVerificationEmail(newUser, verifyToken);
+      //   return { data: _.pick(user, ["firstName", "isVerified", "email"]) };
+      // }
+
+      const authToken = jwtUtils.generateToken({
+        id: newUser.id,
+        subscribed: newUser.subscribed,
+        expire: newUser.expire,
+        role: newUser.role,
+      });
+
+      return {
+        authToken,
+        data: _.pick(newUser, [
+          "subscribed",
+          "profile",
+          "isVerified",
+          "role",
+          "can_upload",
+        ]),
+        is_new: true,
+      };
+    }
+
+    // if (!user.isVerified) {
+    //   const verifyToken = await token.generateVerificationToken(user.email);
+    //   await mail.sendVerificationEmail(user, verifyToken);
+    //   return { data: _.pick(user, ["firstName", "isVerified", "email"]) };
+    // }
 
     const authToken = jwtUtils.generateToken({
       id: user.id,
@@ -97,10 +146,11 @@ authService.login = async (data, password) => {
         "role",
         "can_upload",
       ]),
+      is_new: false,
     };
   } catch (error) {
     console.log(error);
-    throw new Error(error);
+    throw new Error("Invalid Credentials");
   }
 };
 

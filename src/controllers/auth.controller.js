@@ -2,6 +2,7 @@ const authValidation = require("../validators/auth.validator");
 const validateErrorFormatter = require("../utils/validateErrorFormatter");
 const authService = require("../services/auth.service");
 const Response = require("../utils/errorResponse");
+const { encryptData } = require("../utils/crypto");
 // const addDateToCurrentDate = require("../utils/date");
 
 const CookieOptions = {
@@ -35,6 +36,8 @@ authController.register = async (request, response) => {
     });
   } catch (err) {
     const errors = validateErrorFormatter(err);
+
+    console.log(err);
     return Response.INVALID_REQUEST({
       response,
       message: errors,
@@ -44,10 +47,8 @@ authController.register = async (request, response) => {
 };
 
 authController.login = async (request, response) => {
-  console.log(request.body);
   try {
     const { authToken, data } = await authService.login(request.body);
-    console.log(data);
     if (Object.keys(data).length !== 0 && !data.isVerified) {
       return Response.INVALID_REQUEST({
         response,

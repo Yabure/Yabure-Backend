@@ -5,7 +5,7 @@ const User = {
   async findByEmail(email) {
     const result = await prisma.user.findUnique({
       where: {
-        email: email.toLocaleLowerCase(),
+        email: email.toLowerCase(),
       },
       include: {
         profile: {

@@ -94,7 +94,6 @@ model user_interest {
   user      user     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
 }
 
 model rule {

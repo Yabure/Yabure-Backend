@@ -41,6 +41,7 @@
     "lodash": "^4.17.21",
     "nodemailer": "^6.7.2",
     "nodemailer-express-handlebars": "^4.0.0",
+    "nodemailer-mailgun-transport": "^2.1.5",
     "nodemailer-sendgrid-transport": "^0.2.0",
     "uuid": "^8.3.2"
   },
