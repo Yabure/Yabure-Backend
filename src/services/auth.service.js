@@ -66,15 +66,13 @@ authService.adminRegisterUser = async (data) => {
   }
 };
 
-authService.login = async (data, password) => {
+authService.login = async (data) => {
   try {
-    const authKey = decryptaHash(data.data);
-
     const userData = await axios.get(
       `${process.env.KINDE_URL}/oauth2/user_profile`,
       {
         headers: {
-          Authorization: `Bearer ${authKey}`,
+          Authorization: `Bearer ${data.data}`,
         },
       }
     );
