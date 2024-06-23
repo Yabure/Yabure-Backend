@@ -1,5 +1,5 @@
 const roles = {
-  USER: [],
+  USER: ["canUploadBooks"],
   ADMIN: ["canUploadBooks", "canCreateUser", "canDeleteUser", "canDeleteBooks"],
   MODERATOR: ["canUploadBooks", "canDeleteBooks"],
 };

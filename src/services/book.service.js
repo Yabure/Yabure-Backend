@@ -91,7 +91,11 @@ bookService.uploadKeyBook = async ({ body, headers, header }) => {
 };
 
 bookService.getAllBooks = async () => {
-  const books = await Book.findAll();
+  const books = await prisma.book.findMany({
+    include: {
+      user: true,
+    },
+  });
   return books;
 };
 
@@ -173,7 +177,14 @@ bookService.addRatings = async ({ bookId, rating }) => {
 };
 
 bookService.getSingleBook = async (id) => {
-  const result = await Book.findOne(id);
+  const result = await prisma.book.findUnique({
+    where: {
+      id: id,
+    },
+    include: {
+      user: true, // Include user data
+    },
+  });
   return result;
 };
 
