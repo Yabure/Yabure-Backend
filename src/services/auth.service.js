@@ -68,59 +68,59 @@ authService.adminRegisterUser = async (data) => {
 
 authService.login = async (data) => {
   try {
-    const userData = await axios.get(
-      `${process.env.KINDE_URL}/oauth2/user_profile`,
-      {
-        headers: {
-          Authorization: `Bearer ${data.data}`,
-        },
-      }
-    );
+    // const userData = await axios.get(
+    //   `${process.env.KINDE_URL}/oauth2/user_profile`,
+    //   {
+    //     headers: {
+    //       Authorization: `Bearer ${data.data}`,
+    //     },
+    //   }
+    // );
 
-    if (userData.statusText !== "OK") {
-      throw new Error("Invalid Credentials");
-    }
+    // if (userData.statusText !== "OK") {
+    //   throw new Error("Invalid Credentials");
+    // }
 
-    const user = await User.findByEmail(userData.data.preferred_email);
+    const user = await User.findByEmail(data.email);
 
-    if (!user) {
-      await authService.register({
-        firstName: userData.data.first_name,
-        lastName: userData.data.last_name,
-        email: userData.data.preferred_email,
-        phoneNumber: "9045391299",
-        password: "qrq3rqfqc",
-      });
+    // if (!user) {
+    //   await authService.register({
+    //     firstName: userData.data.first_name,
+    //     lastName: userData.data.last_name,
+    //     email: userData.data.preferred_email,
+    //     phoneNumber: "9045391299",
+    //     password: "qrq3rqfqc",
+    //   });
 
-      const newUser = await User.findByEmail(userData.data.preferred_email);
+    //   const newUser = await User.findByEmail(userData.data.preferred_email);
 
-      // if (!newUser.isVerified) {
-      //   const verifyToken = await token.generateVerificationToken(
-      //     newUser.email
-      //   );
-      //   await mail.sendVerificationEmail(newUser, verifyToken);
-      //   return { data: _.pick(user, ["firstName", "isVerified", "email"]) };
-      // }
+    //   // if (!newUser.isVerified) {
+    //   //   const verifyToken = await token.generateVerificationToken(
+    //   //     newUser.email
+    //   //   );
+    //   //   await mail.sendVerificationEmail(newUser, verifyToken);
+    //   //   return { data: _.pick(user, ["firstName", "isVerified", "email"]) };
+    //   // }
 
-      const authToken = jwtUtils.generateToken({
-        id: newUser.id,
-        subscribed: newUser.subscribed,
-        expire: newUser.expire,
-        role: newUser.role,
-      });
+    //   const authToken = jwtUtils.generateToken({
+    //     id: newUser.id,
+    //     subscribed: newUser.subscribed,
+    //     expire: newUser.expire,
+    //     role: newUser.role,
+    //   });
 
-      return {
-        authToken,
-        data: _.pick(newUser, [
-          "subscribed",
-          "profile",
-          "isVerified",
-          "role",
-          "can_upload",
-        ]),
-        is_new: true,
-      };
-    }
+    //   return {
+    //     authToken,
+    //     data: _.pick(newUser, [
+    //       "subscribed",
+    //       "profile",
+    //       "isVerified",
+    //       "role",
+    //       "can_upload",
+    //     ]),
+    //     is_new: true,
+    //   };
+    // }
 
     // if (!user.isVerified) {
     //   const verifyToken = await token.generateVerificationToken(user.email);
@@ -156,7 +156,7 @@ authService.registerAndLogin = async (user) => {
   try {
     const unHashedPass = user.password;
     const newUser = await authService.register(user);
-    const { authToken, data } = await authService.login(newUser, unHashedPass);
+    const { authToken, data } = await authService.login(newUser);
     return { authToken, data };
   } catch (err) {
     console.log(err);
