@@ -1,5 +1,7 @@
+const { createRouteHandler } = require("uploadthing/fastify");
 const bookController = require("../controllers/book.controller");
 const { canUploadMiddleware } = require("../middleware/roles.middleware");
+const uploadRouter = require("../services/uploadthing");
 
 const book = (fastify, options, next) => {
   fastify.post(

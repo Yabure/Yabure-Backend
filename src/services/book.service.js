@@ -13,6 +13,8 @@ const Comments = require("../data-access/comments.dao");
 const New_Comments = require("../data-access/new_coments.das");
 const { v4: uuidv4 } = require("uuid");
 const { getUserByKey } = require("../data-access/user.dao");
+const { PrismaClient } = require("@prisma/client")
+const prisma = new PrismaClient({errorFormat: 'minimal'})
 
 const bookService = {};
 
@@ -93,7 +95,12 @@ bookService.uploadKeyBook = async ({ body, headers, header }) => {
 bookService.getAllBooks = async () => {
   const books = await prisma.book.findMany({
     include: {
-      user: true,
+      user: {
+        select: {
+          id: true,
+          profile: true
+        }
+      }
     },
   });
   return books;
@@ -182,7 +189,12 @@ bookService.getSingleBook = async (id) => {
       id: id,
     },
     include: {
-      user: true, // Include user data
+      user: {
+        select: {
+          id: true,
+          profile: true,
+        }
+      }
     },
   });
   return result;

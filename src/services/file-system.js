@@ -8,31 +8,12 @@ const { S3Client } = require("@aws-sdk/client-s3");
 const bucketName = process.env.AWS_BUCKET_NAME;
 
 const s3 = new S3({
-  endpoint: 's3.us-east-005.backblazeb2.com',
   region: process.env.AWS_BUCKET_REGION,
   secretAccessKey: process.env.AWS_SECRET_KEY,
   accessKeyId: process.env.AWS_ACCESS_KEY,
 });
 
-// const f = createdUploadthing();
-
-// const s3 = new S3Client({
-//   endpoint: 's3.us-east-005.backblazeb2.com',
-//   region: 'us-east-005.',
-// })
-
 const fileSystem = {};
-
-// export const uploadRouter = {
-//   fileUploader: f({
-//     file: {
-//       maxFileSize: "10MB",
-//       maxFileCount: 4
-//     },
-//   }).onUploadComplete((data) => {
-//     console.log("upload completed", data)
-//   })
-// }
 
 fileSystem.uploadFile = async (folder, file) => {
   const fileName = `${Date.now()}-${Math.round(Math.random() * 1e9)}.${
