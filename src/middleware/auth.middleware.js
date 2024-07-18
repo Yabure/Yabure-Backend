@@ -46,22 +46,22 @@ exports.isLoggedIn = (fastify) => {
 };
 
 const isSubscribed = async (user) => {
-  if (!user.expire) throw new Error("Your Subscription has expired");
+  // if (!user.expire) throw new Error("Your Subscription has expired");
 
-  if (new Date(user.expire) < Date.now()) {
-    const result = await User.countAll({
-      subscribed: {
-        equals: false,
-      },
-      expire: {
-        equals: user.expire,
-      },
-      id: {
-        equals: user.id,
-      },
-    });
-    if (result > 0) throw new Error("Your Subscription has expired");
-  }
+  // if (new Date(user.expire) < Date.now()) {
+  //   const result = await User.countAll({
+  //     subscribed: {
+  //       equals: false,
+  //     },
+  //     expire: {
+  //       equals: user.expire,
+  //     },
+  //     id: {
+  //       equals: user.id,
+  //     },
+  //   });
+  //   if (result > 0) throw new Error("Your Subscription has expired");
+  // }
 
   return;
 };
