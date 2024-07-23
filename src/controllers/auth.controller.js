@@ -46,6 +46,31 @@ authController.register = async (request, response) => {
   }
 };
 
+authController.auth0 = async (request, response) => {
+  try {
+    const validatedData = await authValidation.auth0Registration(request.body);
+    const { authToken, data, is_new } = await authService.auth0(validatedData);
+
+    response.cookie(process.env.SESSION_NAME, authToken, {
+      ...CookieOptions,
+    });
+    return Response.SUCCESS({
+      response,
+      data: { data, is_new },
+      message: "Authentication Successfull"
+    })
+  } catch (err) {
+    const errors = validateErrorFormatter(err);
+
+    console.log(err);
+    return Response.INVALID_REQUEST({
+      response,
+      message: errors,
+      subscribed: false,
+    });
+  }
+}
+
 authController.login = async (request, response) => {
   try {
     const { authToken, data } = await authService.login(request.body);

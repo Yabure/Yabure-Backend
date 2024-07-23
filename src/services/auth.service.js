@@ -164,6 +164,44 @@ authService.registerAndLogin = async (user) => {
   }
 };
 
+authService.auth0 = async (data) => {
+  try {
+    const email = data.email.toLowerCase();
+    let user = await User.findByEmail(email);
+
+    if (!user) {
+      data.isVerified = true;
+      data.subscribed = false;
+      data.role = "USER";
+      data.expire = addDateToCurrentDate(7);
+
+      user = await User.insert(data);
+    }
+
+    const authToken = jwtUtils.generateToken({
+      id: user.id,
+      subscribed: user.subscribed,
+      expire: user.expire,
+      role: user.role,
+    });
+
+    return {
+      authToken,
+      data: _.pick(user, [
+        "subscribed",
+        "profile",
+        "isVerified",
+        "role",
+        "can_upload",
+      ]),
+      is_new: !user,
+    };
+  } catch (err) {
+    console.error('Error in auth0:', err);
+    throw new Error('Authentication failed.');
+  }
+};
+
 authService.verifyUser = async (data) => {
   if (!data.email || !data.token) throw new Error("Token or Email is empty");
   const user = await User.findByEmail(data.email);
