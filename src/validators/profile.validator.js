@@ -18,6 +18,10 @@ profileValidation.validateProfile = (data) => {
       "string.min": "Phone Number is Invalid",
       "string.max": "Phone Number is Invalid",
     }),
+    bio: Joi.string().max(255).messages({
+      "string.base": "Bio should be string",
+      "string.empty": "Bio cannot be empty",
+    }),
     account_name: Joi.string().messages({
       "string.base": "Account name should be string",
       "string.empty": "Account name cannot be empty",

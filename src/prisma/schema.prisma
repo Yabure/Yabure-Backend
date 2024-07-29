@@ -68,6 +68,7 @@ model profile {
   fullName    String
   username    String   @unique
   picture     String   @default("null")
+  bio         String?  @default("null")
   phoneNumber String
   notes       Int      @default(0)
   streams     Int      @default(0)
