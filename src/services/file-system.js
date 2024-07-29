@@ -92,6 +92,27 @@ fileSystem.uploadBook = async (file) => {
   }
 };
 
+fileSystem.uploadCoverPhoto = async (image) => {
+  try {
+    const filetypes = /jpeg|jpg|png/;
+    // Check ext
+    const extname = filetypes.test(path.extname(image.filename).toLowerCase());
+    // Check mime
+    const mimetype = filetypes.test(image.mimetype);
+
+    if (!(mimetype && extname)) {
+      throw new Error("file type not supported", 400);
+    }
+
+    const url = await fileSystem.uploadFile("books/coverPhoto", image);
+
+    const fileName = await fileSystem.getFileName(url);
+    return fileName;
+  } catch (error) {
+    throw new Error(error, 500);
+  }
+};
+
 fileSystem.uploadAudio = async (file) => {
   try {
     const filetypes = /aac|wma|wav|mp3|mpeg|mp4|m4a/;

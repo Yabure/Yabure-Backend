@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "book" ADD COLUMN     "cover_photo" TEXT NOT NULL DEFAULT E'',
+ADD COLUMN     "discounted_price" DOUBLE PRECISION,
+ADD COLUMN     "price" DOUBLE PRECISION NOT NULL DEFAULT 0;

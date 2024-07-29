@@ -110,6 +110,9 @@ model book {
   bookName       String
   bookNumber     String           @unique
   category       String
+  cover_photo    String           @default("")
+  price          Float            @default(0)
+  discounted_price Float?
   new_comments   new_comments?
   explanations   explanations[]
   rating         Json?

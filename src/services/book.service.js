@@ -24,17 +24,25 @@ bookService.uploadBook = async ({ body, user }) => {
       throw new Error("Book Name is required");
     if (!body || !body.categoryId || !body.categoryId.value.trim())
       throw new Error("CategoryId is required");
+    if (!body || !body.cover_photo)
+      throw new Error("cover_photo is required")
+    if (!body || !body.price)
+      throw new Error("price is required")
 
     const interest = await Interest.findById(body.categoryId.value);
     if (!interest) throw new Error("Category does not exist");
 
     const bookNumber = await fileSystem.uploadBook(body.book);
+    const cover_photo = await fileSystem.uploadCoverPhoto(body.cover_photo);
 
     const data = {
       author: user.id,
       bookName: body.bookName.value.toLowerCase(),
       bookNumber,
       category: body.categoryId.value,
+      cover_photo,
+      price: parseFloat(body.price.value),
+      discounted_price: parseFloat(body.discounted_price.value) || 0,
       rating: {
         one_star: 0,
         two_star: 0,
@@ -45,15 +53,15 @@ bookService.uploadBook = async ({ body, user }) => {
       },
     };
 
-    console.log(data);
+    console.log(data)
 
     await Book.insert(data);
     await Profile.addNotes(user.id);
 
     return true;
   } catch (error) {
-    throw new Error(error);
     console.log(error);
+    throw new Error(error);
   }
 };
 
