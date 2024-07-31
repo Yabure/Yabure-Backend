@@ -13,7 +13,6 @@ exports.isLoggedIn = (fastify) => {
     "webhook",
     "key",
     "subscribtions",
-    "books"
   ];
 
   fastify.addHook("preValidation", async (request, response) => {
@@ -28,7 +27,7 @@ exports.isLoggedIn = (fastify) => {
       try {
         if (request.cookies[SESSION_NAME]) {
           const user = jwtUtils.decrypt(request.cookies[SESSION_NAME]);
-          await isSubscribed(user);
+          // await isSubscribed(user);
           return (request.user = user);
         }
         throw new Error("Unauthorized");
