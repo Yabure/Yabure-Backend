@@ -29,6 +29,7 @@ const book = (fastify, options, next) => {
   fastify.post("/reading/last-read", bookController.updateReadingLastRead);
 
   fastify.post("/upload/book", bookController.uploadKeyBook);
+  fastify.get("/popular-uploaders", bookController.getPopularUploaders);
   next();
 };
 

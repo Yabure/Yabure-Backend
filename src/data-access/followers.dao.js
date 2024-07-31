@@ -18,7 +18,26 @@ const Followers = {
         
         return result;
     },
-      
+    
+    async findAll() {
+        const result = await prisma.followers.findMany({
+            include: {
+              user: {
+                select: {
+                  profile: {
+                    select: {
+                      username: true,
+                      picture: true,
+                      notes: true,
+                    },
+                  },
+                },
+              },
+            },
+        });
+
+        return result;
+    }
 }
 
 module.exports = Followers

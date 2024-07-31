@@ -74,6 +74,20 @@ bookController.getSuggestedBooks = async (req, res) => {
   }
 };
 
+bookController.getPopularUploaders = async (req, res) => {
+  try {
+    const popularUploaders = await bookService.getPopularUploaders(req)
+    Response.SUCCESS({
+      response: res,
+      data: popularUploaders,
+      message: "Request successfull"
+    })
+  } catch (error) {
+    const errors = validateErrorFormatter(error);
+    return Response.INVALID_REQUEST({ response: res, errors });
+  }
+}
+
 bookController.rateBook = async (req, res) => {
   try {
     const books = await bookService.addRatings(req.body);

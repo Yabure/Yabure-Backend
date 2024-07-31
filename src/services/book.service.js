@@ -11,6 +11,7 @@ const Finished = require("../data-access/finished.dao");
 const Explanation = require("../data-access/explanation.dao");
 const Comments = require("../data-access/comments.dao");
 const New_Comments = require("../data-access/new_coments.das");
+const Followers = require("../data-access/followers.dao")
 const { v4: uuidv4 } = require("uuid");
 const { getUserByKey } = require("../data-access/user.dao");
 const { PrismaClient } = require("@prisma/client")
@@ -267,6 +268,18 @@ bookService.addFinishedBooks = async ({ user, body }) => {
 
   return;
 };
+
+bookService.getPopularUploaders = async ({ user }) => {
+  const result = await Followers.findAll();
+  const sortedByFollowers = result
+    .filter(entry => entry.userId !== user.id)
+    .sort((a, b) => b.followers.length - a.followers.length)
+    .map(entry => ({
+      ...entry,
+      following: entry.followers.includes(user.id)
+    }));
+  return sortedByFollowers;
+}
 
 bookService.addExplanation = async ({ user, body }) => {
   if (!body || !body.audio) throw new Error("Audio is required");
