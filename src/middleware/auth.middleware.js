@@ -13,6 +13,7 @@ exports.isLoggedIn = (fastify) => {
     "webhook",
     "key",
     "subscribtions",
+    "books"
   ];
 
   fastify.addHook("preValidation", async (request, response) => {
