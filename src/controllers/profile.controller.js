@@ -65,4 +65,46 @@ profileController.changePassword = async (req, res) => {
   }
 };
 
+profileController.addViews = async (req, res) => {
+    try {
+        if(req.params && req.params.id) {
+            const views = await profileService.addViews(req);
+            return Response.SUCCESS({ response: res, data: views });
+        }
+    } catch (error) {
+        const errors = validateErrorFormatter(error);
+        return Response.INVALID_REQUEST({ response: res, errors });
+    }
+}
+
+profileController.addLikes = async (req, res) => {
+    try {
+        if (req.params && req.params.id) {
+            const likes = await profileService.addLikes(req);
+            return Response.SUCCESS({
+                response: res,
+                data: likes,
+            })
+        }
+    } catch (error) {
+        const errors = validateErrorFormatter(error);
+        return Response.INVALID_REQUEST({ response: res, errors });
+    }
+}
+
+profileController.addDislikes = async (req, res) => {
+    try {
+        if (req.params && req.params.id) {
+            const dislikes = await profileService.addDislikes(req);
+            return Response.SUCCESS({
+                response: res,
+                data: dislikes,
+            })
+        }
+    } catch (error) {
+        const errors = validateErrorFormatter(error);
+        return Response.INVALID_REQUEST({ response: res, errors });
+    }
+}
+
 module.exports = profileController;

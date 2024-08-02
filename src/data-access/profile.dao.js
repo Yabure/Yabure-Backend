@@ -9,6 +9,7 @@ const Profile = {
       include: {
         user: {
           select: {
+            id: true,
             email: true,
             can_upload: true,
             subscribed: true,
@@ -87,6 +88,15 @@ const Profile = {
         phoneNumber: data.phone,
       },
     });
+
+    return result;
+  },
+
+  async updateAny(userId, data) {
+    const result = await prisma.profile.update({
+      where: { userId },
+      data: { ...data }
+    })
 
     return result;
   },

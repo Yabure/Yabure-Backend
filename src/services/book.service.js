@@ -275,10 +275,46 @@ bookService.getPopularUploaders = async ({ user }) => {
     .filter(entry => entry.userId !== user.id)
     .sort((a, b) => b.followers.length - a.followers.length)
     .map(entry => ({
-      ...entry,
-      following: entry.followers.includes(user.id)
+      id: entry.id,
+      userId: entry.userId,
+      user: {
+        profile: {
+            username: entry.user.profile.username,
+            picture: entry.user.profile.picture,
+            notes: entry.user.profile.notes,
+            isVerified: entry.user.isVerified
+        },
+      },
+      following: entry.followers.includes(user.id),
+      views: entry.user.profile.views?.length || 0,
+      likes: entry.user.profile.likes?.length || 0,
+      dislikes: entry.user.profile.dislikes?.length || 0
     }));
   return sortedByFollowers;
+}
+
+bookService.getSimilarUploaders = async ({ user }) => {
+    const userBooks = await Book.findAllByAuthor(user.id)
+    const similarBooks = await Book.findByCategory(userBooks[0].category);
+    const sanitizedSimilarBooks = similarBooks
+        .filter(entry => entry.user.id !== user.id)
+        .map(entry => ({
+            userId: entry.user.id,
+            user: {
+                profile: {
+                    username: entry.user.profile.username,
+                    picture: entry.user.profile.picture,
+                    notes: entry.user.profile.notes,
+                    isVerified: entry.user.isVerified
+                },
+            },
+            following: entry.user.followers.followers.includes(user.id),
+            views: entry.user.profile.views?.length || 0,
+            likes: entry.user.profile.likes?.length || 0,
+            dislikes: entry.user.profile.dislikes?.length || 0
+        }))
+
+    return sanitizedSimilarBooks;
 }
 
 bookService.addExplanation = async ({ user, body }) => {

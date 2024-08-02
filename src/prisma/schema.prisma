@@ -24,6 +24,8 @@ model user {
   devices        String[]
   average_rating Float?           @default(0)
   interest       user_interest?
+  sales           Float?          @default(0)
+  balance         Float?          @default(0)
   account        account?
   profile        profile?
   followers      followers?
@@ -72,6 +74,9 @@ model profile {
   phoneNumber String
   notes       Int      @default(0)
   streams     Int      @default(0)
+  views       String[]
+  likes       String[]
+  dislikes    String[]
   user        user     @relation(fields: [userId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

@@ -254,12 +254,22 @@ const Book = {
         user: {
           select: {
             id: true,
+            isVerified: true,
             profile: {
               select: {
                 fullName: true,
                 username: true,
+                picture: true,
+                views: true,
+                likes: true,
+                dislikes: true,
               },
             },
+            followers: {
+                select: {
+                    followers: true
+                }
+            }
           },
         },
       },

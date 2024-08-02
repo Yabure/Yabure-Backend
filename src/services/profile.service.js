@@ -55,6 +55,66 @@ profileService.addProfile = async ({ user }, data) => {
   return userProfile;
 };
 
+profileService.addViews = async ({ params, user }) => {
+  const result = await Profile.findById(params.id);
+  if (!result) throw new Error("user not found");
+  const { views, userId } = result;
+
+  if (!views.includes(user.id) && userId != user.id) {
+    views.push(user.id);
+  }
+
+  await Profile.updateAny(params.id, views)
+
+  return;
+}
+
+profileService.addLikes = async ({ params, user }) => {
+    const result = await Profile.findById(params.id);
+    if (!result) throw new Error("User not found");
+
+    const { likes, dislikes, userId } = result;
+
+    // Remove from dislikes if already present
+    if (dislikes.includes(user.id) && userId != user.id) {
+        dislikes.splice(dislikes.indexOf(user.id), 1);
+    }
+
+    // Add to likes if not already present
+    if (!likes.includes(user.id) && userId != user.id) {
+        likes.push(user.id);
+    } else {
+        throw new Error("User has already liked this profile");
+    }
+
+    await result.updateAny(params.id, likes);
+
+    return;
+}
+
+profileService.addDislikes = async ({ params, user}) => {
+    const result = await Profile.findById(params.id);
+    if (!result) throw new Error("User not found");
+
+    const { likes, dislikes, userId } = result;
+
+    // Remove from likes if already present
+    if (likes.includes(user.id) && userId != user.id) {
+        likes.splice(likes.indexOf(user.id), 1);
+    }
+
+    // Add to dislikes if not already present
+    if (!dislikes.includes(user.id) && userId != user.id) {
+        dislikes.push(user.id);
+    } else {
+        throw new Error("User has already disliked this profile");
+    }
+
+    await result.updateAny(params.id, dislikes);
+
+    return;
+}
+
 profileService.changePassword = async ({ user }, data) => {
   const userAccount = await User.findById(user.id);
   if (!userAccount) throw new Error("This user doesn't exists");
