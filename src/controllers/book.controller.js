@@ -105,6 +105,23 @@ bookController.getSimilarUploaders = async (req, res) => {
     }
 }
 
+bookController.getSimilarBooks = async (req, res) => {
+    try {
+        const similarBooks = await bookService.getSimilarBooks(req);
+        Response.SUCCESS({
+            response: res,
+            data: similarBooks,
+            message: "Request Successful"
+        })
+    } catch (error) {
+        const errors = validateErrorFormatter(error);
+        return Response.INVALID_REQUEST({
+            response: res,
+            errors
+        })
+    }
+}
+
 bookController.rateBook = async (req, res) => {
   try {
     const books = await bookService.addRatings(req.body);

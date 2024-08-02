@@ -107,6 +107,7 @@ bookService.getAllBooks = async () => {
       user: {
         select: {
           id: true,
+          sales: true,
           profile: true
         }
       }
@@ -114,6 +115,29 @@ bookService.getAllBooks = async () => {
   });
   return books;
 };
+
+bookService.getSimilarBooks = async ({ params, user }) => {
+    const book = await prisma.book.findFirst(params.id);
+    const { category } = book;
+    const similarBooks = await prisma.book.findMany({
+        where: { category },
+        include: {
+            user: {
+              select: {
+                profile: {
+                    select: {
+                        username: true
+                    }
+                }
+              },
+            },
+          },
+    })
+    const filteredBooks = similarBooks
+        .filter(entry => entry.author != user.id)
+
+    return filteredBooks;
+}
 
 bookService.getSuggestedBooks = async ({ user }) => {
   const userInterest = await UserInterest.findByUserId(user.id);
