@@ -3,6 +3,8 @@ const Account = require("../data-access/account.dao");
 const fileSystem = require("../services/file-system");
 const User = require("../data-access/user.dao");
 const bcryptUtils = require("../utils/bcryptUtils");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient({ errorFormat: "minimal" });
 const ratingService = require("./rating.service");
 
 const profileService = {};
@@ -114,6 +116,105 @@ profileService.addDislikes = async ({ params, user}) => {
 
     return;
 }
+
+const getStartDate = (period) => {
+    const now = new Date();
+    switch (period) {
+      case 'last_7_days':
+        return new Date(now.setDate(now.getDate() - 7));
+      case 'last_1_month':
+        return new Date(now.setMonth(now.getMonth() - 1));
+      case 'last_3_months':
+        return new Date(now.setMonth(now.getMonth() - 3));
+      case '6_months':
+        return new Date(now.setMonth(now.getMonth() - 6));
+      case 'last_1_year':
+        return new Date(now.setFullYear(now.getFullYear() - 1));
+      default:
+        return new Date();
+    }
+  }
+
+  const formatDate = (date, period) => {
+    const options = { month: 'short', year: 'numeric' };
+    switch (period) {
+      case 'last_7_days':
+        return date.toISOString().split('T')[0];
+      case 'last_1_month':
+      case 'last_3_months':
+        const startOfWeek = new Date(date);
+        startOfWeek.setDate(date.getDate() - date.getDay());
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6);
+        return `${startOfWeek.toISOString().split('T')[0]} to ${endOfWeek.toISOString().split('T')[0]}`;
+      case 'last_6_months':
+      case 'last_1_year':
+        return date.toLocaleDateString('en-US', options);
+      default:
+        return date.toISOString().split('T')[0];
+    }
+  };
+
+  const getNextDate = (date, period) => {
+    const newDate = new Date(date);
+    switch (period) {
+      case 'last_7_days':
+        newDate.setDate(newDate.getDate() + 1);
+        break;
+      case 'last_1_month':
+      case 'last_3_months':
+        newDate.setDate(newDate.getDate() + 7);
+        break;
+      case 'last_6_months':
+      case 'last_1_year':
+        newDate.setMonth(newDate.getMonth() + 1);
+        break;
+    }
+    return newDate;
+  };
+
+  profileService.getTransactionPerformance = async ({ params, user }) => {
+    const startDate = getStartDate(params.period);
+    const now = new Date();
+
+    const transactions = await prisma.book_transactions.findMany({
+      where: {
+        owner: user.id,
+        createdAt: {
+          gte: startDate,
+          lte: now,
+        },
+        status: 'CONFIRMED',
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+    });
+
+    // Create a map for the specified period
+    const dataMap = {};
+    for (let d = new Date(startDate); d <= now; d = getNextDate(d, params.period)) {
+      const dateKey = formatDate(d, params.period);
+      dataMap[dateKey] = { sales: 0, earnings: 0 };
+    }
+
+    // Populate the map with transaction data
+    transactions.forEach(transaction => {
+      const dateKey = formatDate(transaction.createdAt, params.period);
+      dataMap[dateKey].sales += 1;
+      dataMap[dateKey].earnings += transaction.amount;
+    });
+
+    // Convert the map to arrays
+    const salesPerDay = [];
+    const earningsPerDay = [];
+    for (const dateKey in dataMap) {
+      salesPerDay.push(dataMap[dateKey].sales);
+      earningsPerDay.push(dataMap[dateKey].earnings);
+    }
+
+    return { salesPerDay, earningsPerDay };
+  };
 
 profileService.changePassword = async ({ user }, data) => {
   const userAccount = await User.findById(user.id);

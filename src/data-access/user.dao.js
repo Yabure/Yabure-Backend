@@ -87,8 +87,38 @@ const User = {
       where: {
         id,
       },
-      data,
+      data: { ...data },
     });
+  },
+
+  async addBookToBoughtBooks(userId, bookId) {
+    const result = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        boughtBooks: {
+          push: bookId,
+        },
+      },
+    });
+    return result;
+  },
+
+  async updateBalance(id, balance) {
+    const result = await prisma.user.update({
+        where: {
+            id
+        },
+        data: {
+            balance: {
+                increment: balance
+            },
+            sales: {
+                increment: 1,
+            }
+        }
+    })
+
+    return result;
   },
 
   async updateByEmail(email, data) {

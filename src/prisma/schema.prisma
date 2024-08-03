@@ -30,6 +30,7 @@ model user {
   profile        profile?
   followers      followers?
   comments       comments[]
+  boughtBooks    String[]
   books          book[]
   finished_books finished_books[]
   reading        reading[]
@@ -128,6 +129,18 @@ model book {
   user           user             @relation(fields: [author], references: [id])
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
+}
+
+model book_transactions {
+    id          String          @id @default(uuid())
+    bookId      String
+    owner       String
+    buyer       String
+    amount      Float
+    status      String
+    reference   String
+    createdAt   DateTime        @default(now())
+    updatedAt   DateTime        @updatedAt
 }
 
 model followers {

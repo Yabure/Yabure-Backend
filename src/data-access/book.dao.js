@@ -183,6 +183,29 @@ const Book = {
     return result;
   },
 
+  async findByAuthor(id) {
+    let result = await prisma.book.findFirst({
+        where: {
+          author: id,
+        },
+        include: {
+          user: {
+            select: {
+              id: true,
+              profile: {
+                select: {
+                  fullName: true,
+                  username: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      return result;
+  },
+
   async findOne(id) {
     const data = await prisma.book.findUnique({
       where: {
@@ -208,6 +231,7 @@ const Book = {
         "id",
         "author",
         "bookName",
+        "price",
         "book",
         "rating",
         "user",
@@ -298,6 +322,34 @@ const Book = {
   async insert(data) {
     const result = await prisma.book.create({ data });
     return result;
+  },
+
+  async createTransaction(data) {
+    const result = await prisma.book_transactions.create({ data });
+    return result
+  },
+
+  async updateTransaction(data) {
+    const result = await prisma.book_transactions.updateMany({
+        where: { id: data.transactionId },
+        data: {
+            status: data.status
+         }
+    })
+
+    result;
+  },
+
+  async getAllBookTransactions() {
+    const result = await prisma.book_transactions.findMany()
+    return result
+  },
+
+  async getSingleTransaction(data) {
+    const result = await prisma.book_transactions.findFirst({
+        where: { reference: data.reference },
+    })
+    return result
   },
 
   async updateBookRating(data) {

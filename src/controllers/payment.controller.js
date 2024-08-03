@@ -2,6 +2,7 @@ const {
   getAllSubscription,
   initializeTransaction,
   addpayment,
+  initializeBookPayment
 } = require("../services/payment.service");
 const Response = require("../utils/errorResponse");
 const validateErrorFormatter = require("../utils/validateErrorFormatter");
@@ -26,6 +27,16 @@ paymentController.initializeTransaction = async (req, res) => {
     const errors = await validateErrorFormatter(err);
     return Response.INVALID_REQUEST({ response: res, errors });
   }
+};
+
+paymentController.initializeBookTransaction = async (req, res) => {
+    try {
+        const data = await initializeBookPayment(req);
+        return Response.SUCCESS({ response: res, data });
+    } catch (err) {
+        const errors = await validateErrorFormatter(err);
+        return Response.INVALID_REQUEST({ response: res, errors });
+    }
 };
 
 paymentController.addPayment = async (req, res) => {
