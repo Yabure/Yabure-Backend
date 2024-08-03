@@ -126,10 +126,20 @@ const getStartDate = (period) => {
         return new Date(now.setMonth(now.getMonth() - 1));
       case 'last_3_months':
         return new Date(now.setMonth(now.getMonth() - 3));
-      case '6_months':
+      case 'last_6_months':
         return new Date(now.setMonth(now.getMonth() - 6));
       case 'last_1_year':
         return new Date(now.setFullYear(now.getFullYear() - 1));
+      case 'previous_last_7_days':
+        return new Date(now.setDate(now.getDate() - 14));
+      case 'previous_last_1_month':
+        return new Date(now.setMonth(now.getMonth() - 2));
+      case 'previous_last_3_months':
+        return new Date(now.setMonth(now.getMonth() - 6));
+      case 'previous_last_6_months':
+        return new Date(now.setMonth(now.getMonth() - 12));
+      case 'previous_last_1_year':
+        return new Date(now.setFullYear(now.getFullYear() - 2));
       default:
         return new Date();
     }
@@ -139,9 +149,12 @@ const getStartDate = (period) => {
     const options = { month: 'short', year: 'numeric' };
     switch (period) {
       case 'last_7_days':
+      case 'previous_last_7_days':
         return date.toISOString().split('T')[0];
       case 'last_1_month':
       case 'last_3_months':
+      case 'previous_last_1_month':
+      case 'previous_last_3_months':
         const startOfWeek = new Date(date);
         startOfWeek.setDate(date.getDate() - date.getDay());
         const endOfWeek = new Date(startOfWeek);
@@ -149,6 +162,8 @@ const getStartDate = (period) => {
         return `${startOfWeek.toISOString().split('T')[0]} to ${endOfWeek.toISOString().split('T')[0]}`;
       case 'last_6_months':
       case 'last_1_year':
+      case 'previous_last_6_months':
+      case 'previous_last_1_year':
         return date.toLocaleDateString('en-US', options);
       default:
         return date.toISOString().split('T')[0];
@@ -159,14 +174,19 @@ const getStartDate = (period) => {
     const newDate = new Date(date);
     switch (period) {
       case 'last_7_days':
+      case 'previous_last_7_days':
         newDate.setDate(newDate.getDate() + 1);
         break;
       case 'last_1_month':
       case 'last_3_months':
+      case 'previous_last_1_month':
+      case 'previous_last_3_months':
         newDate.setDate(newDate.getDate() + 7);
         break;
       case 'last_6_months':
       case 'last_1_year':
+      case 'previous_last_6_months':
+      case 'previous_last_1_year':
         newDate.setMonth(newDate.getMonth() + 1);
         break;
     }
@@ -177,12 +197,29 @@ const getStartDate = (period) => {
     const startDate = getStartDate(params.period);
     const now = new Date();
 
+    // Get transactions for the specified period
     const transactions = await prisma.book_transactions.findMany({
       where: {
         owner: user.id,
         createdAt: {
           gte: startDate,
           lte: now,
+        },
+        status: 'CONFIRMED',
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+    });
+
+    // Get transactions for the previous equivalent period to calculate percentage change
+    const previousStartDate = getStartDate(`previous_${params.period}`);
+    const previousTransactions = await prisma.book_transactions.findMany({
+      where: {
+        owner: user.id,
+        createdAt: {
+          gte: previousStartDate,
+          lte: startDate,
         },
         status: 'CONFIRMED',
       },
@@ -205,16 +242,37 @@ const getStartDate = (period) => {
       dataMap[dateKey].earnings += transaction.amount;
     });
 
-    // Convert the map to arrays
+    // Convert the map to arrays and calculate total sales and earnings
     const salesPerDay = [];
     const earningsPerDay = [];
+    let totalSales = 0;
+    let totalEarnings = 0;
     for (const dateKey in dataMap) {
       salesPerDay.push(dataMap[dateKey].sales);
       earningsPerDay.push(dataMap[dateKey].earnings);
+      totalSales += dataMap[dateKey].sales;
+      totalEarnings += dataMap[dateKey].earnings;
     }
 
-    return { salesPerDay, earningsPerDay };
-  };
+    // Calculate total earnings for the previous period
+    let previousTotalEarnings = 0;
+    previousTransactions.forEach(transaction => {
+      previousTotalEarnings += transaction.amount;
+    });
+
+    // Calculate percentage change in earnings
+    const earningsChangePercentage = previousTotalEarnings
+      ? ((totalEarnings - previousTotalEarnings) / previousTotalEarnings) * 100
+      : 0;
+
+    return {
+      salesPerDay,
+      earningsPerDay,
+      totalSales,
+      totalEarnings,
+      earningsChangePercentage
+    };
+};
 
 profileService.changePassword = async ({ user }, data) => {
   const userAccount = await User.findById(user.id);
