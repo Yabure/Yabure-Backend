@@ -341,8 +341,44 @@ const Book = {
   },
 
   async getAllBookTransactions() {
-    const result = await prisma.book_transactions.findMany()
+    const result = await prisma.book_transactions.findMany({
+        include: {
+            book : {
+                select: {
+                    bookName: true,
+                    price: true,
+                    bookNumber: true,
+                },
+            },
+            author: {
+                select: {
+                    profile: {
+                        select: {
+                            fullName,
+                            username,
+                        }
+                    }
+                }
+            },
+            buyerUser: {
+                select: {
+                    profile: {
+                        select: {
+                            fullName,
+                            username,
+                        }
+                    }
+                }
+            }
+        }
+    })
     return result
+  },
+
+  async getBookransactionById(data) {
+    const result = await prisma.book_transactions.findFirst({
+        where: { id: data.id }
+    })
   },
 
   async getSingleTransaction(data) {

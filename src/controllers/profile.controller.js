@@ -109,7 +109,7 @@ profileController.addDislikes = async (req, res) => {
 
 profileController.getTransactionPerformance = async (req, res) => {
     try {
-        if (req.params && req.params.period) {
+        if (req.query && req.query.period) {
             const data = await profileService.getTransactionPerformance(req)
             return Response.SUCCESS({
                 response: res,

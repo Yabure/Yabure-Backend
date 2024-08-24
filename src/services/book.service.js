@@ -41,7 +41,7 @@ bookService.uploadBook = async ({ body, user }) => {
       bookName: body.bookName.value.toLowerCase(),
       bookNumber,
       category: body.categoryId.value,
-      cover_photo,
+      cover_photo: cover_photo,
       price: parseFloat(body.price.value),
       discounted_price: parseFloat(body.discounted_price.value) || 0,
       rating: {

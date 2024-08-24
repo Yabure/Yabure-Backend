@@ -10,7 +10,7 @@ exports.isLoggedIn = (fastify) => {
     "auth",
     "interests",
     "rules",
-    "webhook",
+    // "webhook",
     "key",
     "subscribtions",
   ];

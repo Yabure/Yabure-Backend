@@ -42,6 +42,8 @@ model user {
   plan           plans?           @relation(fields: [plan_code], references: [plan_code])
   expire         String?
   reset          String?          @unique
+  authoredBooks  book_transactions[] @relation("AuthorRelation")
+  purchasedBooks book_transactions[] @relation("BuyerRelation")
   isVerified     Boolean          @default(false)
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
@@ -125,6 +127,7 @@ model book {
   rating         Json?
   reading        reading[]
   finished_books finished_books[]
+  transactions   book_transactions[] @relation("BookTransactionsRelation")
   interest       interest         @relation(fields: [category], references: [id])
   user           user             @relation(fields: [author], references: [id])
   createdAt      DateTime         @default(now())
@@ -139,6 +142,9 @@ model book_transactions {
     amount      Float
     status      String
     reference   String
+    book        book            @relation("BookTransactionsRelation", fields: [bookId], references: [id])
+    author      user            @relation("AuthorRelation", fields: [owner], references: [id])
+    buyerUser   user            @relation("BuyerRelation", fields: [buyer], references: [id])
     createdAt   DateTime        @default(now())
     updatedAt   DateTime        @updatedAt
 }

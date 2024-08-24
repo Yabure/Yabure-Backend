@@ -9,7 +9,7 @@ const profile = (fastify, options, next) => {
     fastify.post("/addViews/:id", profileController.addViews);
     fastify.post("/addLikes/:id", profileController.addLikes);
     fastify.post("/addDislikes/:id", profileController.addDislikes);
-    fastify.get("/getTransactionPerformance/:period", profileController.getTransactionPerformance);
+    fastify.get("/getTransactionPerformance", profileController.getTransactionPerformance);
     next();
 }
 

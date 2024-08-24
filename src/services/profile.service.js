@@ -193,8 +193,8 @@ const getStartDate = (period) => {
     return newDate;
   };
 
-  profileService.getTransactionPerformance = async ({ params, user }) => {
-    const startDate = getStartDate(params.period);
+  profileService.getTransactionPerformance = async ({ query, user }) => {
+    const startDate = getStartDate(query.period);
     const now = new Date();
 
     // Get transactions for the specified period
@@ -213,7 +213,7 @@ const getStartDate = (period) => {
     });
 
     // Get transactions for the previous equivalent period to calculate percentage change
-    const previousStartDate = getStartDate(`previous_${params.period}`);
+    const previousStartDate = getStartDate(`previous_${query.period}`);
     const previousTransactions = await prisma.book_transactions.findMany({
       where: {
         owner: user.id,
@@ -230,14 +230,14 @@ const getStartDate = (period) => {
 
     // Create a map for the specified period
     const dataMap = {};
-    for (let d = new Date(startDate); d <= now; d = getNextDate(d, params.period)) {
-      const dateKey = formatDate(d, params.period);
+    for (let d = new Date(startDate); d <= now; d = getNextDate(d, query.period)) {
+      const dateKey = formatDate(d, query.period);
       dataMap[dateKey] = { sales: 0, earnings: 0 };
     }
 
     // Populate the map with transaction data
     transactions.forEach(transaction => {
-      const dateKey = formatDate(transaction.createdAt, params.period);
+      const dateKey = formatDate(transaction.createdAt, query.period);
       dataMap[dateKey].sales += 1;
       dataMap[dateKey].earnings += transaction.amount;
     });
