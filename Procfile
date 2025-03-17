@@ -1,2 +1,2 @@
 web: npm start
-release: npx prisma generate, npm run migrate-prod
+release: npx prisma generate && npm run migrate-prod
