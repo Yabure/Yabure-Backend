@@ -60,6 +60,27 @@ mail.sendVerificationEmail = async (user, token) => {
     });
 };
 
+// New method for sending password reset OTP
+mail.sendPasswordResetOTP = async (email, token) => {
+  const data = {
+    to: [`${email}`],
+    from: `${process.env.SENDGRID_EMAIL_SENDER}`,
+    subject: "Password Reset Code",
+    template: "password-reset",
+    context: {
+      token
+    },
+  };
+  await mailer
+    .sendMail(data)
+    .then(() => {
+      return true;
+    })
+    .catch((err) => {
+      throw new Error(err);
+    });
+};
+
 mail.modAccountCreatedEmail = async (user) => {
   const data = {
     to: [`${user.email}`],
