@@ -89,7 +89,7 @@ fileSystem.uploadBook = async (file) => {
     const fileName = await fileSystem.getFileName(url);
     return fileName;
   } catch (error) {
-    throw new Error(error.message || "Failed to upload book", 500);
+    throw new Error(error?.message || "Failed to upload book", 500);
   }
 };
 
@@ -107,7 +107,7 @@ fileSystem.uploadCoverPhoto = async (image) => {
     const fileName = await fileSystem.getFileName(url);
     return fileName;
   } catch (error) {
-    throw new Error(error.message || "Failed to upload cover photo", 500);
+    throw new Error(error?.message || "Failed to upload cover photo", 500);
   }
 };
 
@@ -125,7 +125,7 @@ fileSystem.uploadAudio = async (file) => {
     const fileName = await fileSystem.getFileName(url);
     return fileName;
   } catch (error) {
-    throw new Error(error.message || "Failed to upload audio");
+    throw new Error(error?.message || "Failed to upload audio");
   }
 };
 

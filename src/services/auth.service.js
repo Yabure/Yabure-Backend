@@ -11,6 +11,9 @@ const crypto = require("crypto");
 const { decryptaHash } = require("../utils/crypto");
 const { default: axios } = require("axios");
 
+// Initialize mail service to use Mailtrap provider
+mail.initialize("mailtrap");
+
 const authService = {};
 
 authService.register = async (data) => {

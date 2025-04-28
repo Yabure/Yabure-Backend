@@ -8,3 +8,7 @@ package-lock.json
 # firebase_sdk_config.json
 .DS_Store
 /src/.DS_Store
+.vscode
+/.vscode
+
+secret-key
