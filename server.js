@@ -6,6 +6,10 @@ const App = require("./src/app");
 
 App(server);
 
-server.listen(process.env.PORT, "0.0.0.0", () => {
-  console.log("listening on port " + process.env.PORT);
+server.listen({ port: 3000 }, (err) => {
+  if (err) {
+    console.error('Error starting server:', err);
+    process.exit(1);
+  }
+  console.log('Server listening on port 3000');
 });

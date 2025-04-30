@@ -18,12 +18,15 @@ authService.register = async (data) => {
     const user = await User.findByEmail(data.email.toLowerCase());
     if (user) throw new Error("user already exists");
     data.password = bcryptUtils.hashPassword(data.password);
-    data.isVerified = true;
+    data.isVerified = false;
     data.subscribed = false;
     data.role = "USER";
     data.expire = addDateToCurrentDate(7);
 
-    const newUser = await User.insert(data);
+    // Generate verification token (OTP) and send email
+    const verifyToken = await token.generateVerificationToken(newUser.email);
+    await mail.sendVerificationEmail(newUser, verifyToken);
+
     return newUser;
   } catch (error) {
     console.log(error);
@@ -122,11 +125,11 @@ authService.login = async (data) => {
     //   };
     // }
 
-    // if (!user.isVerified) {
-    //   const verifyToken = await token.generateVerificationToken(user.email);
-    //   await mail.sendVerificationEmail(user, verifyToken);
-    //   return { data: _.pick(user, ["firstName", "isVerified", "email"]) };
-    // }
+    // Check if user is verified
+    if (!user.isVerified) {
+      // If not verified, return user data with isVerified status
+      return { data: _.pick(user, ["firstName", "isVerified", "email"]) };
+    }
 
     const authToken = jwtUtils.generateToken({
       id: user.id,
@@ -156,8 +159,12 @@ authService.registerAndLogin = async (user) => {
   try {
     const unHashedPass = user.password;
     const newUser = await authService.register(user);
-    const { authToken, data } = await authService.login(newUser);
-    return { authToken, data };
+    // Return user data without logging in since verification is required
+    return {
+      authToken: null,
+      data: _.pick(newUser, ["email", "isVerified"]),
+      message: "Please verify your email to complete registration"
+    };
   } catch (err) {
     console.log(err);
     throw new Error(err);
@@ -233,17 +240,27 @@ authService.resendVerification = async ({ email }) => {
   return true;
 };
 
-authService.forgotPassword = async ({ email }) => {
+// Modified to verify OTP before resetting password
+authService.resetPassword = async ({ email, token, password }) => {
   try {
-    const id = uuidv4();
-    const user = await User.updateByEmail(email, {
-      reset: id,
+    if (!email || !token || !password) throw new Error("Missing required fields");
+
+    const user = await User.findByEmail(email);
+    if (!user) throw new Error("User does not exist");
+
+    // Verify the OTP token
+    const verified = await token.verifyUserToken(email, token);
+    if (!verified) throw new Error("Invalid OTP code");
+
+    // Update password
+    const updatedUser = await User.updateByEmail(email, {
+      password: bcryptUtils.hashPassword(password)
     });
 
-    await mail.sendForgotPasswordEmail(email, id);
-    return user;
+    return { success: true, message: "Password reset successful" };
   } catch (error) {
     console.log(error);
+    throw new Error(error);
   }
 };
 

@@ -10,9 +10,10 @@ const payment = require("./payment.routes");
 const webhook = require("./webhook.routes");
 const notification = require("./notification.routes");
 const admin = require("./admin.routes");
+const googleAuth = require("./google-auth.routes");
 const { createRouteHandler } = require("uploadthing/fastify");
-const { uploadRouter } = require("../services/uploadthing");
-const { config } = require("aws-sdk");
+// const { uploadRouter } = require("../services/uploadthing");
+// const { config } = require("aws-sdk");
 
 const routes = (fastify) => {
   fastify.register(auth, { prefix: "/v1/auth" });
@@ -28,6 +29,7 @@ const routes = (fastify) => {
   fastify.register(notification, { prefix: "/v1/" });
   fastify.register(admin, { prefix: "/v1/admin" });
   fastify.register(book, { prefix: "/v1/key" });
+  fastify.register(googleAuth, { prefix: "/v1/auth" });
 };
 
 module.exports = routes;

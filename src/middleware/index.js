@@ -12,16 +12,18 @@ const corsOptions = {
 
 console.log(process.env.AUTH_NAME);
 
-const Middlewares = (fastify) => {
-  fastify.register(require("fastify-cors"), corsOptions);
-  fastify.register(require("fastify-helmet"), { contentSecurityPolicy: false });
-  fastify.register(require("fastify-cookie"), {
+const Middlewares = async (fastify) => {
+  fastify.register(require("@fastify/cors"), corsOptions);
+  fastify.register(require("@fastify/helmet"), { contentSecurityPolicy: false });
+  fastify.register(require("@fastify/cookie"), {
     secret: process.env.AUTH_NAME,
   });
-  fastify.register(require("fastify-multipart"), {
+  fastify.register(require("@fastify/multipart"), {
     attachFieldsToBody: true,
     limit: { fileSize: 5 * 1024 * 1024 },
   });
+  const setupGoogleAuth = require("../services/google-auth.service");
+  fastify.register(setupGoogleAuth);
   isLoggedIn(fastify);
 };
 
