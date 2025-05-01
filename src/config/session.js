@@ -20,7 +20,7 @@ const ensureSecretKey = () => {
 
 // Session configuration
 const sessionConfig = {
-  key: fs.readFileSync(ensureSecretKey()),
+  key: process.env.SESSION_SECRET,
   cookie: {
     path: '/',
     secure: process.env.NODE_ENV === 'production',
