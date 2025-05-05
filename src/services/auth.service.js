@@ -26,11 +26,16 @@ authService.register = async (data) => {
     data.role = "USER";
     data.expire = addDateToCurrentDate(7);
 
+    const newUser = await User.insert(data);
+
     // Generate verification token (OTP) and send email
-    const verifyToken = await token.generateVerificationToken(newUser.email);
+    const verifyToken = await token.generateVerificationToken(data.email);
     await mail.sendVerificationEmail(newUser, verifyToken);
 
-    return newUser;
+    return {
+      data: _.pick(newUser, ["email", "isVerified"]),
+      message: "Please verify your email to complete registration",
+    };
   } catch (error) {
     console.log(error);
     const err = validateErrorFormatter(error);

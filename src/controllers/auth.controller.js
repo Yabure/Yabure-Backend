@@ -103,7 +103,7 @@ authController.login = async (request, response) => {
 
 authController.verifyUser = async (request, response) => {
   try {
-    const { authToken } = await authService.verifyUser(request.query);
+    const { authToken } = await authService.verifyUser(request.body);
     response.cookie(process.env.SESSION_NAME, authToken, {
       ...CookieOptions,
     });
@@ -120,7 +120,7 @@ authController.verifyUser = async (request, response) => {
 
 authController.resendVerification = async (request, response) => {
   try {
-    await authService.resendVerification(request.query);
+    await authService.resendVerification(request.body);
 
     return Response.SUCCESS({
       response,

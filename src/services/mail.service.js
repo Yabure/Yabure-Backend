@@ -146,7 +146,7 @@ class MailService {
       template: "token",
       context: {
         token,
-        firstName: user.profile.fullName.split(" ")[0],
+        firstName: user.firstName,
       },
     };
     
