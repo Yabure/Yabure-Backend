@@ -6,7 +6,7 @@ const App = require("./src/app");
 
 App(server);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 server.listen({ port: PORT }, (err) => {
   if (err) {
