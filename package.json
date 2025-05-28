@@ -28,6 +28,8 @@
     "@fastify/multipart": "^7.7.3",
     "@fastify/passport": "^2.3.0",
     "@fastify/secure-session": "^6.1.0",
+    "@fastify/swagger": "^8.12.2",
+    "@fastify/swagger-ui": "^2.1.0",
     "@prisma/client": "^3.13.0",
     "axios": "^0.25.0",
     "bcrypt": "^5.0.1",

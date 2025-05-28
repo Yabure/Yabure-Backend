@@ -4,7 +4,8 @@ const interest = require("./interest.routes");
 const user = require("./user.routes");
 const profile = require("./profile.routes");
 const account = require("./account.routes");
-const book = require("./books.routes");
+// Using simplified book routes for Swagger documentation
+const book = require("./books-simplified.js");
 const search = require("./search.routes");
 const payment = require("./payment.routes");
 const webhook = require("./webhook.routes");

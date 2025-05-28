@@ -7,7 +7,23 @@ const googleAuthRoutes = (fastify, options, next) => {
   fastify.get('/google', {
     preValidation: fastifyPassport.authenticate('google', {
       scope: ['profile', 'email']
-    })
+    }),
+    schema: {
+      tags: ['Auth'],
+      summary: 'Google Authentication',
+      description: 'Initiate Google authentication process',
+      response: {
+        200: {
+          description: 'Successful authentication',
+          type: 'object',
+          properties: {
+            statusCode: { type: 'integer' },
+            data: { type: 'object' },
+            message: { type: 'string' }
+          }
+        }
+      }
+    }
   }, async (request, reply) => {
     // This route handler won't be called as the authentication middleware
     // will redirect to Google's authentication page
