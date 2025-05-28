@@ -1,4 +1,5 @@
 const { isLoggedIn } = require("./auth.middleware");
+const { swaggerOptions, swaggerUiOptions } = require("../config/swagger");
 
 const corsOptions = {
   origin:
@@ -13,6 +14,11 @@ const corsOptions = {
 console.log(process.env.AUTH_NAME);
 
 const Middlewares = async (fastify) => {
+  // Register Swagger plugins
+  fastify.register(require("@fastify/swagger"), swaggerOptions);
+  fastify.register(require("@fastify/swagger-ui"), swaggerUiOptions);
+
+  // Register other middleware
   fastify.register(require("@fastify/cors"), corsOptions);
   fastify.register(require("@fastify/helmet"), { contentSecurityPolicy: false });
   fastify.register(require("@fastify/cookie"), {
